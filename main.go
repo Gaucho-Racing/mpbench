@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"mpbench/config"
+	"mpbench/utils"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	config.PrintStartupBanner()
+	utils.InitializeLogger()
+	defer utils.Logger.Sync()
 }
