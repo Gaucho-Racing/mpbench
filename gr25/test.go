@@ -12,7 +12,7 @@ type MessageTest struct {
 	ExpectedValues map[string]interface{}
 }
 
-func (m MessageTest) Run(mqttPort int, dbPort int) {
+func (m MessageTest) Run(mqttPort int, dbPort int) bool {
 	timestamp := time.Now().UnixMicro()
 	uploadKey := 103103
 	// Create byte array to hold timestamp (8 bytes) + uploadKey (2 bytes) + data
@@ -21,18 +21,20 @@ func (m MessageTest) Run(mqttPort int, dbPort int) {
 	binary.BigEndian.PutUint16(result[8:10], uint16(uploadKey))
 	copy(result[10:], m.Data)
 
-
-
-func (m MessageTest) Verify(dbPort int) {
-	for key, value := range m.ExpectedValues {
-		query := fmt.Sprintf("SELECT %s FROM gr25_messages WHERE id = %d", key, m.ID)
-		rows, err := db.Query(query)
-		if err != nil {
-			panic(err)
-		}
-	}
+	SendMqttMessage(mqttPort, fmt.Sprintf("gr25-test/%d", m.ID), result)
+	time.Sleep(1 * time.Second)
+	return m.Verify(dbPort)
 }
 
+// TODO: Make this actually execute db queries properly
+func (m MessageTest) Verify(dbPort int) bool {
+	for key, value := range m.ExpectedValues {
+		fmt.Println(key, value)
+	}
+	return false
+}
+
+// TODO: Make this send mqtt messages in the correct format
 func SendMqttMessage(port int, topic string, message []byte) {
-	
+
 }
