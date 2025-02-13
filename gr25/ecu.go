@@ -1,10 +1,11 @@
 package gr25
 
-import "mpbench/utils"
+import "gorm.io/gorm"
 
-func SendECUStatusOne(mqttPort int, dbPort int) {
+func SendECUStatusOne(mqttPort int, db *gorm.DB) {
 	test1 := MessageTest{
 		ID:   0x003,
+		Name: "ECU Status One Test 1",
 		Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
 		ExpectedValues: map[string]interface{}{
 			"ecu_state":               0,
@@ -30,10 +31,5 @@ func SendECUStatusOne(mqttPort int, dbPort int) {
 			"ecu_glv_state_of_charge": 0,
 		},
 	}
-	status := test1.Run(mqttPort, dbPort)
-	if !status {
-		utils.SugarLogger.Infof("❌ TEST FAILED: %d ECU Status One", test1.ID)
-		return
-	}
-	utils.SugarLogger.Infof("✅ TEST PASSED: %d ECU Status One", test1.ID)
+	test1.Run(mqttPort, db)
 }
