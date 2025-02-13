@@ -15,10 +15,8 @@ func ConnectMQTT(broker string, port int, clientID string) (*MQTT.Client, error)
 	opts.SetPingTimeout(1 * time.Second)
 	opts.SetAutoReconnect(true)
 
-	// Create new client
 	client := MQTT.NewClient(opts)
 
-	// Connect to broker
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		return nil, fmt.Errorf("failed to connect to MQTT broker: %v", token.Error())
 	}
