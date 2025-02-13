@@ -5,6 +5,10 @@ import (
 	"gorm.io/gorm"
 )
 
+func RunECUTests(mqttClient *mqtt.Client, db *gorm.DB) {
+	SendECUStatusOne(mqttClient, db)
+}
+
 func SendECUStatusOne(mqttClient *mqtt.Client, db *gorm.DB) {
 	test1 := MessageTest{
 		ID:   0x003,
