@@ -4,6 +4,7 @@ import (
 	"context"
 	"mpbench/database"
 	"mpbench/gr25"
+	"mpbench/mqtt"
 	"mpbench/utils"
 	"strconv"
 
@@ -23,6 +24,12 @@ func StartTest() {
 	defer mqttContainer.Terminate(ctx)
 	defer singleStoreContainer.Terminate(ctx)
 
+	mqttClient, err := mqtt.ConnectMQTT("localhost", mqttPort, "mpbench")
+	if err != nil {
+		utils.SugarLogger.Error("Failed to connect to MQTT", err)
+		return
+	}
+
 	db, err := database.ConnectDB("root", "password", "localhost", strconv.Itoa(dbPort), "information_schema")
 	if err != nil {
 		utils.SugarLogger.Error("Failed to connect to database", err)
@@ -32,7 +39,7 @@ func StartTest() {
 	db.Exec("USE mapache")
 	db.AutoMigrate(&mapache.Signal{})
 
-	gr25.SendECUStatusOne(mqttPort, db)
+	gr25.SendECUStatusOne(mqttClient, db)
 }
 
 func InitializeContainers() (int, int, testcontainers.Container, testcontainers.Container, error) {

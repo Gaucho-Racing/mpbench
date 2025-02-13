@@ -3,6 +3,7 @@ module mpbench
 go 1.23.6
 
 require (
+	github.com/eclipse/paho.mqtt.golang v1.5.0
 	github.com/fatih/color v1.18.0
 	github.com/gaucho-racing/mapache-go v1.6.1
 	github.com/testcontainers/testcontainers-go v0.35.0
@@ -11,9 +12,13 @@ require (
 )
 
 require (
+	github.com/eclipse/paho.golang v0.22.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
+	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	golang.org/x/net v0.27.0 // indirect
+	golang.org/x/sync v0.7.0 // indirect
 )
 
 require (

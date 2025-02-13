@@ -3,9 +3,11 @@ package gr25
 import (
 	"encoding/binary"
 	"fmt"
+	"mpbench/mqtt"
 	"mpbench/utils"
 	"time"
 
+	mq "github.com/eclipse/paho.mqtt.golang"
 	"github.com/gaucho-racing/mapache-go"
 	"gorm.io/gorm"
 )
@@ -24,7 +26,7 @@ type MessageTest struct {
 	ExpectedValues map[string]interface{}
 }
 
-func (m MessageTest) Run(mqttPort int, db *gorm.DB) bool {
+func (m MessageTest) Run(mqttClient *mq.Client, db *gorm.DB) bool {
 	timestamp := time.Now().UnixMicro()
 	// Create byte array to hold timestamp (8 bytes) + uploadKey (2 bytes) + data
 	result := make([]byte, 10+len(m.Data))
@@ -34,7 +36,7 @@ func (m MessageTest) Run(mqttPort int, db *gorm.DB) bool {
 
 	utils.SugarLogger.Infof("STARTING TEST: 0x%03x %s", m.ID, m.Name)
 
-	SendMqttMessage(mqttPort, fmt.Sprintf("%s/%d", VehicleID, m.ID), result)
+	SendMqttMessage(mqttClient, fmt.Sprintf("%s/%d", VehicleID, m.ID), result)
 	time.Sleep(1 * time.Second)
 	status := m.Verify(db, timestamp)
 	if !status {
@@ -58,10 +60,15 @@ func (m MessageTest) Verify(db *gorm.DB, timestamp int64) bool {
 			failedSignals = append(failedSignals, key)
 		}
 	}
+	utils.SugarLogger.Infof("Correctly ingested %d/%d signals", len(m.ExpectedValues)-len(failedSignals), len(m.ExpectedValues))
 	return len(failedSignals) == 0
 }
 
-// TODO: Make this send mqtt messages in the correct format
-func SendMqttMessage(port int, topic string, message []byte) {
-
+func SendMqttMessage(mqttClient *mq.Client, topic string, message []byte) {
+	err := mqtt.PublishMessage(mqttClient, topic, message)
+	if err != nil {
+		utils.SugarLogger.Error("Failed to publish MQTT message", err)
+	} else {
+		utils.SugarLogger.Infof("Published MQTT message to %s", topic)
+	}
 }

@@ -1,8 +1,11 @@
 package gr25
 
-import "gorm.io/gorm"
+import (
+	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"gorm.io/gorm"
+)
 
-func SendECUStatusOne(mqttPort int, db *gorm.DB) {
+func SendECUStatusOne(mqttClient *mqtt.Client, db *gorm.DB) {
 	test1 := MessageTest{
 		ID:   0x003,
 		Name: "ECU Status One Test 1",
@@ -31,5 +34,5 @@ func SendECUStatusOne(mqttPort int, db *gorm.DB) {
 			"ecu_glv_state_of_charge": 0,
 		},
 	}
-	test1.Run(mqttPort, db)
+	test1.Run(mqttClient, db)
 }
