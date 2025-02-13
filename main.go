@@ -11,5 +11,5 @@ func main() {
 	utils.InitializeLogger()
 	defer utils.Logger.Sync()
 
-	runner.StartTest("gr24", "ff15acf247f3ade5036c9f2ed19fbdc70dd2b1ab")
+	runner.StartTest("gr25", "d2eaec342f7e9673119d8bb62bd3c15d9db30269")
 }
