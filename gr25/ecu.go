@@ -40,3 +40,5 @@ func SendECUStatusOne(mqttClient *mqtt.Client, db *gorm.DB) {
 	}
 	test1.Run(mqttClient, db)
 }
+
+// this is a comment
