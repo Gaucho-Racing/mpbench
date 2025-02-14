@@ -41,4 +41,30 @@ func SendECUStatusOne(mqttClient *mqtt.Client, db *gorm.DB) {
 	test1.Run(mqttClient, db)
 }
 
-// this is a comment
+func SendECUStatusTwo(mqttClient *mqtt.Client, db *gorm.DB) {
+	test1 := MessageTest{
+		ID:   0x004,
+		Name: "ECU Status Two Test 1",
+		Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+		ExpectedValues: map[string]interface{}{
+			"tractive_system_voltage": 0,
+			"vehicle_speed":           0,
+			"fr_wheel_rpm":            0,
+			"fl_wheel_rpm":            0,
+		},
+	}
+	test1.Run(mqttClient, db)
+}
+
+func SendECUStatusThree(mqttClient *mqtt.Client, db *gorm.DB) {
+	test1 := MessageTest{
+		ID:   0x005,
+		Name: "ECU Status Three Test 1",
+		Data: []byte{0x00, 0x00, 0x00, 0x00},
+		ExpectedValues: map[string]interface{}{
+			"rr_wheel_rpm": 0,
+			"rl_wheel_rpm": 0,
+		},
+	}
+	test1.Run(mqttClient, db)
+}
