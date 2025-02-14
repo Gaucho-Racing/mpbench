@@ -72,7 +72,7 @@ func StartTest(serviceName string, commit string) {
 	}
 	defer mapacheContainer.Terminate(ctx)
 
-	time.Sleep(5 * time.Second)
+	time.Sleep(2 * time.Second)
 
 	RunTestSuite(serviceName, mqttClient, db)
 
@@ -143,7 +143,7 @@ func InitializeMapacheContainer(image string, mqttPort int, dbPort int) (testcon
 	req := testcontainers.ContainerRequest{
 		Image:        image,
 		ExposedPorts: []string{"7000/tcp"},
-		WaitingFor:   wait.ForLog("Connected to database"),
+		WaitingFor:   wait.ForLog("Connected to MQTT broker"),
 		Env: map[string]string{
 			"ENV":               "PROD",
 			"PORT":              "7000",
