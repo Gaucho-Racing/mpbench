@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"mpbench/database"
-	"mpbench/gr25"
 	"mpbench/mqtt"
 	"mpbench/service"
 	"mpbench/utils"
@@ -20,7 +19,7 @@ import (
 
 func RunTestSuite(serviceName string, mqttClient *mq.Client, db *gorm.DB) {
 	if serviceName == "gr25" {
-		gr25.RunECUTests(mqttClient, db)
+		StartGR25Tests(mqttClient, db)
 	}
 }
 

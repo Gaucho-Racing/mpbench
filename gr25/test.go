@@ -36,7 +36,7 @@ func (m MessageTest) Run(mqttClient *mq.Client, db *gorm.DB) bool {
 
 	utils.SugarLogger.Infof("STARTING TEST: 0x%03x %s", m.ID, m.Name)
 
-	SendMqttMessage(mqttClient, fmt.Sprintf("%s/%d", VehicleID, m.ID), result)
+	SendMqttMessage(mqttClient, fmt.Sprintf("%s/%03x", VehicleID, m.ID), result)
 	time.Sleep(1 * time.Second)
 	status := m.Verify(db, timestamp)
 	if !status {
