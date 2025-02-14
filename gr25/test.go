@@ -36,7 +36,7 @@ func (m MessageTest) Run(mqttClient *mq.Client, db *gorm.DB) bool {
 
 	utils.SugarLogger.Infof("STARTING TEST: 0x%03x %s", m.ID, m.Name)
 
-	SendMqttMessage(mqttClient, fmt.Sprintf("%s/%03x", VehicleID, m.ID), result)
+	SendMqttMessage(mqttClient, fmt.Sprintf("gr25/%s/%03x", VehicleID, m.ID), result)
 	time.Sleep(1 * time.Second)
 	status := m.Verify(db, timestamp)
 	if !status {
@@ -50,12 +50,16 @@ func (m MessageTest) Run(mqttClient *mq.Client, db *gorm.DB) bool {
 func (m MessageTest) Verify(db *gorm.DB, timestamp int64) bool {
 	failedSignals := []string{}
 	for key, value := range m.ExpectedValues {
+		valueFloat, ok := value.(float64)
+		if !ok {
+			valueFloat = float64(value.(int))
+		}
 		var signal mapache.Signal
 		db.Where("timestamp = ?", timestamp).Where("vehicle_id = ?", VehicleID).Where("name = ?", key).First(&signal)
 		if signal.Name == "" {
 			utils.SugarLogger.Infof("%s: DNE != %v", key, value)
 			failedSignals = append(failedSignals, key)
-		} else if signal.Value != value {
+		} else if signal.Value != valueFloat {
 			utils.SugarLogger.Infof("%s: %f scaled (%d raw) != %v", key, signal.Value, signal.RawValue, value)
 			failedSignals = append(failedSignals, key)
 		}
