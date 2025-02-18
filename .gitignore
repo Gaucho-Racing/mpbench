@@ -28,3 +28,6 @@ drive-service-account.json
 go.work
 
 coverage.html
+
+key.pem
+private.pem

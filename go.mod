@@ -6,6 +6,7 @@ require (
 	github.com/eclipse/paho.mqtt.golang v1.5.0
 	github.com/fatih/color v1.18.0
 	github.com/gaucho-racing/mapache-go v1.6.1
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/testcontainers/testcontainers-go v0.35.0
 	go.uber.org/zap v1.27.0
 	gorm.io/gorm v1.25.7
