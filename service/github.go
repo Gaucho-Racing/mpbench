@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"mpbench/config"
+	"mpbench/model"
 	"mpbench/utils"
 	"net/http"
 	"os"
@@ -136,23 +137,7 @@ func CreateCheckRun(commit string) (string, error) {
 	req.Header.Set("Accept", "application/vnd.github+json")
 	req.Header.Set("Content-Type", "application/json")
 
-	type CheckRunPayload struct {
-		Name        string `json:"name,omitempty"`
-		HeadSHA     string `json:"head_sha,omitempty"`
-		Status      string `json:"status,omitempty"`
-		Conclusion  string `json:"conclusion,omitempty"`
-		ExternalID  string `json:"external_id,omitempty"`
-		DetailsURL  string `json:"details_url,omitempty"`
-		StartedAt   string `json:"started_at,omitempty"`
-		CompletedAt string `json:"completed_at,omitempty"`
-		Output      struct {
-			Title   string `json:"title,omitempty"`
-			Summary string `json:"summary,omitempty"`
-			Text    string `json:"text,omitempty"`
-		} `json:"output,omitempty"`
-	}
-
-	payload := CheckRunPayload{
+	payload := model.CheckRunPayload{
 		Name:       "mpbench / unit",
 		HeadSHA:    commit,
 		Status:     "queued",
@@ -186,15 +171,52 @@ func CreateCheckRun(commit string) (string, error) {
 		return "", fmt.Errorf("failed to create check run: %s", string(body))
 	}
 
-	var result map[string]interface{}
+	var result model.CheckRunPayload
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		return "", fmt.Errorf("failed to decode response: %w", err)
 	}
 
-	checkRunID, ok := result["id"].(int)
-	if !ok {
+	checkRunID := result.ID
+	if checkRunID == 0 {
 		return "", fmt.Errorf("failed to get check run ID from response")
 	}
 
 	return fmt.Sprintf("%d", checkRunID), nil
+}
+
+func UpdateCheckRun(checkRunID string, payload model.CheckRunPayload) error {
+	token, err := GetGithubAppInstallationToken()
+	if err != nil {
+		return fmt.Errorf("failed to get installation token: %w", err)
+	}
+
+	url := fmt.Sprintf("https://api.github.com/repos/%s/check-runs/%s", config.MapacheRepo, checkRunID)
+	req, err := http.NewRequest("PATCH", url, nil)
+	if err != nil {
+		return fmt.Errorf("failed to create request: %w", err)
+	}
+
+	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Accept", "application/vnd.github+json")
+	req.Header.Set("Content-Type", "application/json")
+
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		return fmt.Errorf("failed to marshal check run payload: %w", err)
+	}
+	req.Body = io.NopCloser(bytes.NewBuffer(jsonData))
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return fmt.Errorf("failed to update check run: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := io.ReadAll(resp.Body)
+		return fmt.Errorf("failed to update check run: %s", string(body))
+	}
+
+	return nil
 }

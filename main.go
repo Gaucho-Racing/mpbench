@@ -3,6 +3,7 @@ package main
 import (
 	"mpbench/api"
 	"mpbench/config"
+	"mpbench/database"
 	"mpbench/utils"
 )
 
@@ -12,7 +13,8 @@ func main() {
 	utils.VerifyConfig()
 	defer utils.Logger.Sync()
 
-	// runner.StartTest("gr25", "ec4a64b247b4378a132f434a85aca770d6ce22a1")
+	database.InitializeDB()
+
 	router := api.SetupRouter()
 	api.InitializeRoutes(router)
 	err := router.Run(":" + config.Port)

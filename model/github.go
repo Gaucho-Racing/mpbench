@@ -206,3 +206,20 @@ type GithubCheckRunEvent struct {
 		NodeID string `json:"node_id"`
 	} `json:"installation"`
 }
+
+type CheckRunPayload struct {
+	ID          int    `json:"id,omitempty"`
+	Name        string `json:"name,omitempty"`
+	HeadSHA     string `json:"head_sha,omitempty"`
+	Status      string `json:"status,omitempty"`
+	Conclusion  string `json:"conclusion,omitempty"`
+	ExternalID  string `json:"external_id,omitempty"`
+	DetailsURL  string `json:"details_url,omitempty"`
+	StartedAt   string `json:"started_at,omitempty"`
+	CompletedAt string `json:"completed_at,omitempty"`
+	Output      struct {
+		Title   string `json:"title,omitempty"`
+		Summary string `json:"summary,omitempty"`
+		Text    string `json:"text,omitempty"`
+	} `json:"output,omitempty"`
+}
