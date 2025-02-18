@@ -1,12 +1,13 @@
 package model
 
 type Run struct {
-	ID               string `gorm:"primaryKey" json:"id"`
-	Name             string `json:"name"`
-	Service          string `json:"service"`
-	Commit           string `json:"commit"`
-	Status           string `json:"status"`
-	GithubCheckRunID int    `json:"github_check_run_id"`
+	ID               string    `gorm:"primaryKey" json:"id"`
+	Name             string    `json:"name"`
+	Service          string    `json:"service"`
+	Commit           string    `json:"commit"`
+	Status           string    `json:"status"`
+	GithubCheckRunID int       `json:"github_check_run_id"`
+	RunTests         []RunTest `gorm:"-" json:"run_tests"`
 }
 
 func (Run) TableName() string {
@@ -14,10 +15,11 @@ func (Run) TableName() string {
 }
 
 type RunTest struct {
-	ID     string `gorm:"primaryKey" json:"id"`
-	RunID  string `json:"run_id"`
-	Name   string `json:"name"`
-	Status string `json:"status"`
+	ID             string          `gorm:"primaryKey" json:"id"`
+	RunID          string          `json:"run_id"`
+	Name           string          `json:"name"`
+	Status         string          `json:"status"`
+	RunTestResults []RunTestResult `gorm:"-" json:"run_test_results"`
 }
 
 func (RunTest) TableName() string {
