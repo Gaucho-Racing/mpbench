@@ -26,4 +26,6 @@ func SetupRouter() *gin.Engine {
 func InitializeRoutes(router *gin.Engine) {
 	router.GET("/ping", Ping)
 	router.POST("/gh-event", GithubEventHandler)
+	router.GET("/runs", GetAllRuns)
+	router.GET("/runs/:id", GetRunByID)
 }
