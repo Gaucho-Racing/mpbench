@@ -198,11 +198,11 @@ func InitializeMapacheContainer(image string, mqttPort int, dbPort int) (testcon
 		Env: map[string]string{
 			"ENV":               "PROD",
 			"PORT":              "7000",
-			"MQTT_HOST":         "host.docker.internal",
+			"MQTT_HOST":         "172.17.0.1",
 			"MQTT_PORT":         strconv.Itoa(mqttPort),
 			"MQTT_USER":         "mpbench",
 			"MQTT_PASSWORD":     "mpbench",
-			"DATABASE_HOST":     "host.docker.internal",
+			"DATABASE_HOST":     "172.17.0.1",
 			"DATABASE_PORT":     strconv.Itoa(dbPort),
 			"DATABASE_NAME":     "mapache",
 			"DATABASE_USER":     "root",
