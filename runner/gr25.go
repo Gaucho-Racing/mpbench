@@ -1,12 +1,9 @@
 package runner
 
 import (
-	"mpbench/gr25"
 	"mpbench/model"
 
-	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 func CreateGR25Run(commit string) (model.Run, error) {
@@ -18,8 +15,4 @@ func CreateGR25Run(commit string) (model.Run, error) {
 		Service: "gr25",
 	}
 	return run, nil
-}
-
-func StartGR25Tests(run model.Run, mqttClient *mqtt.Client, db *gorm.DB) {
-	gr25.RunECUTests(run, mqttClient, db)
 }

@@ -7,6 +7,7 @@ import (
 	"mpbench/mqtt"
 	"mpbench/service"
 	"mpbench/utils"
+	"sync"
 	"time"
 
 	mq "github.com/eclipse/paho.mqtt.golang"
@@ -14,6 +15,26 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
+
+var Tests = []MessageTest{
+	ECUStatusOneTest1,
+	ECUStatusOneTest2,
+	ECUStatusTwoTest1,
+	ECUStatusThreeTest1,
+}
+
+func RunTests(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
+	wg := sync.WaitGroup{}
+	wg.Add(len(Tests))
+
+	for _, test := range Tests {
+		go func(test MessageTest) {
+			test.Run(run, mqttClient, db)
+			wg.Done()
+		}(test)
+	}
+	wg.Wait()
+}
 
 const VehicleID = "gr25-test"
 const UploadKey = 10310
@@ -48,7 +69,7 @@ func (m MessageTest) Run(run model.Run, mqttClient *mq.Client, db *gorm.DB) bool
 	service.CreateRunTest(run_test)
 
 	SendMqttMessage(mqttClient, fmt.Sprintf("gr25/%s/%03x", VehicleID, m.ID), result)
-	time.Sleep(1 * time.Second)
+	WaitForSignals(len(m.ExpectedValues), timestamp, db)
 	status := m.Verify(run_test, db, timestamp)
 	if !status {
 		utils.SugarLogger.Infof("❌ TEST FAILED: 0x%03x %s", m.ID, m.Name)
@@ -60,6 +81,35 @@ func (m MessageTest) Run(run model.Run, mqttClient *mq.Client, db *gorm.DB) bool
 	run_test.Status = "passed"
 	service.CreateRunTest(run_test)
 	return true
+}
+
+func WaitForSignals(numSignals int, timestamp int64, db *gorm.DB) {
+	timeout := time.After(10 * time.Second)
+	ticker := time.NewTicker(1 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-timeout:
+			utils.SugarLogger.Warnf("Timeout waiting for signals (received %d/%d)", getSignalCount(timestamp, db), numSignals)
+			return
+		case <-ticker.C:
+			count := getSignalCount(timestamp, db)
+			if count >= int64(numSignals) {
+				utils.SugarLogger.Infof("Received %d/%d signals", count, numSignals)
+				return
+			}
+		}
+	}
+}
+
+func getSignalCount(timestamp int64, db *gorm.DB) int64 {
+	var count int64
+	db.Model(&mapache.Signal{}).
+		Where("timestamp = ?", timestamp).
+		Where("vehicle_id = ?", VehicleID).
+		Count(&count)
+	return count
 }
 
 func (m MessageTest) Verify(run_test model.RunTest, db *gorm.DB, timestamp int64) bool {

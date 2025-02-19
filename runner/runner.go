@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"mpbench/config"
 	"mpbench/database"
+	"mpbench/gr25"
 	"mpbench/model"
 	"mpbench/mqtt"
 	"mpbench/service"
@@ -22,7 +23,7 @@ import (
 
 func RunTestSuite(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	if run.Service == "gr25" {
-		StartGR25Tests(run, mqttClient, db)
+		gr25.RunTests(run, mqttClient, db)
 	}
 }
 
