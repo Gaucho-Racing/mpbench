@@ -68,7 +68,7 @@ func StartRun(run model.Run) {
 	// Assume docker runtime when running in prod
 	localhost := "localhost"
 	if config.Env == "PROD" {
-		localhost = "host.docker.internal"
+		localhost = "172.17.0.1"
 	}
 
 	mqttClient, err := mqtt.ConnectMQTT(localhost, mqttPort, "mpbench")
