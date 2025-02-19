@@ -3,12 +3,15 @@ package gr25
 import (
 	"encoding/binary"
 	"fmt"
+	"mpbench/model"
 	"mpbench/mqtt"
+	"mpbench/service"
 	"mpbench/utils"
 	"time"
 
 	mq "github.com/eclipse/paho.mqtt.golang"
 	"github.com/gaucho-racing/mapache-go"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -26,7 +29,7 @@ type MessageTest struct {
 	ExpectedValues map[string]interface{}
 }
 
-func (m MessageTest) Run(mqttClient *mq.Client, db *gorm.DB) bool {
+func (m MessageTest) Run(run model.Run, mqttClient *mq.Client, db *gorm.DB) bool {
 	timestamp := time.Now().UnixMicro()
 	// Create byte array to hold timestamp (8 bytes) + uploadKey (2 bytes) + data
 	result := make([]byte, 10+len(m.Data))
@@ -35,19 +38,31 @@ func (m MessageTest) Run(mqttClient *mq.Client, db *gorm.DB) bool {
 	copy(result[10:], m.Data)
 
 	utils.SugarLogger.Infof("STARTING TEST: 0x%03x %s", m.ID, m.Name)
+	run_test := model.RunTest{
+		ID:     uuid.New().String(),
+		RunID:  run.ID,
+		Name:   fmt.Sprintf("0x%03x %s", m.ID, m.Name),
+		Status: "in_progress",
+		Data:   formatData(m.Data),
+	}
+	service.CreateRunTest(run_test)
 
 	SendMqttMessage(mqttClient, fmt.Sprintf("gr25/%s/%03x", VehicleID, m.ID), result)
 	time.Sleep(1 * time.Second)
-	status := m.Verify(db, timestamp)
+	status := m.Verify(run_test, db, timestamp)
 	if !status {
 		utils.SugarLogger.Infof("❌ TEST FAILED: 0x%03x %s", m.ID, m.Name)
+		run_test.Status = "failed"
+		service.CreateRunTest(run_test)
 		return false
 	}
 	utils.SugarLogger.Infof("✅ TEST PASSED: 0x%03x %s", m.ID, m.Name)
+	run_test.Status = "passed"
+	service.CreateRunTest(run_test)
 	return true
 }
 
-func (m MessageTest) Verify(db *gorm.DB, timestamp int64) bool {
+func (m MessageTest) Verify(run_test model.RunTest, db *gorm.DB, timestamp int64) bool {
 	failedSignals := []string{}
 	for key, value := range m.ExpectedValues {
 		valueFloat, ok := value.(float64)
@@ -59,9 +74,37 @@ func (m MessageTest) Verify(db *gorm.DB, timestamp int64) bool {
 		if signal.Name == "" {
 			utils.SugarLogger.Infof("%s: DNE != %v", key, value)
 			failedSignals = append(failedSignals, key)
-		} else if signal.Value != valueFloat {
+			run_test_result := model.RunTestResult{
+				ID:         uuid.New().String(),
+				RunTestID:  run_test.ID,
+				SignalName: key,
+				Status:     "failed",
+				Value:      "DNE",
+				Expected:   fmt.Sprintf("%v", value),
+			}
+			service.CreateRunTestResult(run_test_result)
+		} else if !almostEqual(signal.Value, valueFloat, 1e-6) {
 			utils.SugarLogger.Infof("%s: %f scaled (%d raw) != %v", key, signal.Value, signal.RawValue, value)
 			failedSignals = append(failedSignals, key)
+			run_test_result := model.RunTestResult{
+				ID:         uuid.New().String(),
+				RunTestID:  run_test.ID,
+				SignalName: key,
+				Status:     "failed",
+				Value:      fmt.Sprintf("%f scaled (%d raw)", signal.Value, signal.RawValue),
+				Expected:   fmt.Sprintf("%v", value),
+			}
+			service.CreateRunTestResult(run_test_result)
+		} else {
+			run_test_result := model.RunTestResult{
+				ID:         uuid.New().String(),
+				RunTestID:  run_test.ID,
+				SignalName: key,
+				Status:     "passed",
+				Value:      fmt.Sprintf("%f scaled (%d raw)", signal.Value, signal.RawValue),
+				Expected:   fmt.Sprintf("%v", value),
+			}
+			service.CreateRunTestResult(run_test_result)
 		}
 	}
 	utils.SugarLogger.Infof("Correctly ingested %d/%d signals", len(m.ExpectedValues)-len(failedSignals), len(m.ExpectedValues))
@@ -75,4 +118,28 @@ func SendMqttMessage(mqttClient *mq.Client, topic string, message []byte) {
 	} else {
 		utils.SugarLogger.Infof("Published MQTT message to %s", topic)
 	}
+}
+
+func formatData(data []byte) string {
+	if len(data) == 0 {
+		return "{}"
+	}
+
+	result := "{"
+	for i, b := range data {
+		if i > 0 {
+			result += ", "
+		}
+		result += fmt.Sprintf("0x%02x", b)
+	}
+	result += "}"
+	return result
+}
+
+func almostEqual(a, b, epsilon float64) bool {
+	diff := a - b
+	if diff < 0 {
+		diff = -diff
+	}
+	return diff < epsilon
 }

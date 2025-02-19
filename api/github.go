@@ -3,23 +3,16 @@ package api
 import (
 	"mpbench/config"
 	"mpbench/model"
+	"mpbench/runner"
 	"mpbench/service"
 	"mpbench/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func GithubEventHandler(c *gin.Context) {
-	// // Read and print body
-	// body, err := c.GetRawData()
-	// if err != nil {
-	// 	utils.SugarLogger.Errorf("Error reading body: %v", err)
-	// 	c.JSON(http.StatusBadRequest, gin.H{"error": "Failed to read request body"})
-	// 	return
-	// }
-	// utils.SugarLogger.Infof("Body: %s", string(body))
-
 	ghEventType := c.Request.Header.Get("X-GitHub-Event")
 	if ghEventType == "check_suite" {
 		utils.SugarLogger.Infof("Check suite event received")
@@ -40,6 +33,9 @@ func GithubEventHandler(c *gin.Context) {
 		}
 
 		utils.SugarLogger.Infof("Check suite event: %+v", checkSuiteEvent)
+		if checkSuiteEvent.CheckSuite.Status == "completed" {
+			return
+		}
 
 		go func() {
 			id, err := service.CreateCheckRun(checkSuiteEvent.CheckSuite.HeadSha)
@@ -48,6 +44,17 @@ func GithubEventHandler(c *gin.Context) {
 				return
 			}
 			utils.SugarLogger.Infof("Check run created with ID: %s", id)
+
+			run := model.Run{
+				ID:               uuid.New().String(),
+				Commit:           checkSuiteEvent.CheckSuite.HeadSha,
+				Status:           "queued",
+				Name:             "mpbench / unit",
+				Service:          "gr25",
+				GithubCheckRunID: id,
+			}
+			service.CreateRun(run)
+			runner.StartRun(run)
 		}()
 
 	} else if ghEventType == "check_run" {

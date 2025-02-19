@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type Run struct {
 	ID               string    `gorm:"primaryKey" json:"id"`
 	Name             string    `json:"name"`
@@ -8,6 +10,7 @@ type Run struct {
 	Status           string    `json:"status"`
 	GithubCheckRunID int       `json:"github_check_run_id"`
 	RunTests         []RunTest `gorm:"-" json:"run_tests"`
+	CreatedAt        time.Time `gorm:"autoCreateTime" json:"created_at"`
 }
 
 func (Run) TableName() string {
@@ -19,7 +22,9 @@ type RunTest struct {
 	RunID          string          `json:"run_id"`
 	Name           string          `json:"name"`
 	Status         string          `json:"status"`
+	Data           string          `json:"data"`
 	RunTestResults []RunTestResult `gorm:"-" json:"run_test_results"`
+	CreatedAt      time.Time       `gorm:"autoCreateTime" json:"created_at"`
 }
 
 func (RunTest) TableName() string {
@@ -27,12 +32,13 @@ func (RunTest) TableName() string {
 }
 
 type RunTestResult struct {
-	ID         string  `gorm:"primaryKey" json:"id"`
-	RunTestID  string  `json:"run_test_id"`
-	SignalName string  `json:"signal_name"`
-	Data       string  `json:"data"`
-	Value      float64 `json:"value"`
-	Expected   float64 `json:"expected"`
+	ID         string    `gorm:"primaryKey" json:"id"`
+	RunTestID  string    `json:"run_test_id"`
+	SignalName string    `json:"signal_name"`
+	Status     string    `json:"status"`
+	Value      string    `json:"value"`
+	Expected   string    `json:"expected"`
+	CreatedAt  time.Time `gorm:"autoCreateTime" json:"created_at"`
 }
 
 func (RunTestResult) TableName() string {

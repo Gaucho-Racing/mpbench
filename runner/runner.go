@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"mpbench/database"
+	"mpbench/model"
 	"mpbench/mqtt"
 	"mpbench/service"
 	"mpbench/utils"
@@ -17,27 +18,34 @@ import (
 	"gorm.io/gorm"
 )
 
-func RunTestSuite(serviceName string, mqttClient *mq.Client, db *gorm.DB) {
-	if serviceName == "gr25" {
-		StartGR25Tests(mqttClient, db)
+func RunTestSuite(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
+	if run.Service == "gr25" {
+		StartGR25Tests(run, mqttClient, db)
 	}
 }
 
-func StartTest(serviceName string, commit string) {
-	utils.SugarLogger.Infof("Initializing tests for %s at commit %s", serviceName, commit)
+func StartRun(run model.Run) {
+	if run.GithubCheckRunID != 0 {
+		service.UpdateCheckRunInProgress(run.ID)
+	}
+
+	utils.SugarLogger.Infof("Initializing Run %s (%s) at commit %s", run.ID, run.Service, run.Commit)
+	run.Status = "building"
+	service.CreateRun(run)
 	// Checkout repo and build docker image
-	repoDir, err := service.CheckoutCommit(commit)
+	repoDir, err := service.CheckoutCommit(run.Commit)
 	if err != nil {
 		utils.SugarLogger.Error("Failed to checkout repo", err)
 		return
 	}
 
-	image, err := service.BuildDockerImage(commit, repoDir, serviceName)
+	image, err := service.BuildDockerImage(run.Commit, repoDir, run.Service)
 	if err != nil {
 		utils.SugarLogger.Error("Failed to build docker image", err)
 		return
 	}
-
+	run.Status = "initializing"
+	service.CreateRun(run)
 	// Start dependent containers
 	mqttPort, dbPort, mqttContainer, singleStoreContainer, err := InitializeContainers()
 	if err != nil {
@@ -72,11 +80,33 @@ func StartTest(serviceName string, commit string) {
 	}
 	defer mapacheContainer.Terminate(ctx)
 
+	run.Status = "in_progress"
+	service.CreateRun(run)
 	time.Sleep(2 * time.Second)
 
-	RunTestSuite(serviceName, mqttClient, db)
+	RunTestSuite(run, mqttClient, db)
+	FinishRun(run.ID)
+}
 
-	utils.SugarLogger.Infof("Finished running tests for %s at commit %s", serviceName, commit)
+func FinishRun(runID string) {
+	run := service.GetRunByID(runID)
+	success := true
+	for _, test := range run.RunTests {
+		if test.Status != "passed" {
+			success = false
+			break
+		}
+	}
+	if success {
+		run.Status = "passed"
+	} else {
+		run.Status = "failed"
+	}
+	service.CreateRun(run)
+	if run.GithubCheckRunID != 0 {
+		service.GenerateCheckRunConclusion(run.ID)
+	}
+	utils.SugarLogger.Infof("Finished Run %s (%s) at commit %s", run.ID, run.Service, run.Commit)
 }
 
 func InitializeContainers() (int, int, testcontainers.Container, testcontainers.Container, error) {

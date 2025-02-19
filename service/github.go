@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"sort"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -121,16 +122,16 @@ func GetGithubAppInstallationToken() (string, error) {
 	return result.Token, nil
 }
 
-func CreateCheckRun(commit string) (string, error) {
+func CreateCheckRun(commit string) (int, error) {
 	token, err := GetGithubAppInstallationToken()
 	if err != nil {
-		return "", fmt.Errorf("failed to get installation token: %w", err)
+		return 0, fmt.Errorf("failed to get installation token: %w", err)
 	}
 
 	url := fmt.Sprintf("https://api.github.com/repos/%s/check-runs", config.MapacheRepo)
 	req, err := http.NewRequest("POST", url, nil)
 	if err != nil {
-		return "", fmt.Errorf("failed to create request: %w", err)
+		return 0, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	req.Header.Set("Authorization", "Bearer "+token)
@@ -155,42 +156,42 @@ func CreateCheckRun(commit string) (string, error) {
 
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
-		return "", fmt.Errorf("failed to marshal check run payload: %w", err)
+		return 0, fmt.Errorf("failed to marshal check run payload: %w", err)
 	}
 	req.Body = io.NopCloser(bytes.NewBuffer(jsonData))
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("failed to create check run: %w", err)
+		return 0, fmt.Errorf("failed to create check run: %w", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusCreated {
 		body, _ := io.ReadAll(resp.Body)
-		return "", fmt.Errorf("failed to create check run: %s", string(body))
+		return 0, fmt.Errorf("failed to create check run: %s", string(body))
 	}
 
 	var result model.CheckRunPayload
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return "", fmt.Errorf("failed to decode response: %w", err)
+		return 0, fmt.Errorf("failed to decode response: %w", err)
 	}
 
 	checkRunID := result.ID
 	if checkRunID == 0 {
-		return "", fmt.Errorf("failed to get check run ID from response")
+		return 0, fmt.Errorf("failed to get check run ID from response")
 	}
 
-	return fmt.Sprintf("%d", checkRunID), nil
+	return checkRunID, nil
 }
 
-func UpdateCheckRun(checkRunID string, payload model.CheckRunPayload) error {
+func UpdateCheckRun(checkRunID int, payload model.CheckRunPayload) error {
 	token, err := GetGithubAppInstallationToken()
 	if err != nil {
 		return fmt.Errorf("failed to get installation token: %w", err)
 	}
 
-	url := fmt.Sprintf("https://api.github.com/repos/%s/check-runs/%s", config.MapacheRepo, checkRunID)
+	url := fmt.Sprintf("https://api.github.com/repos/%s/check-runs/%d", config.MapacheRepo, checkRunID)
 	req, err := http.NewRequest("PATCH", url, nil)
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
@@ -219,4 +220,174 @@ func UpdateCheckRun(checkRunID string, payload model.CheckRunPayload) error {
 	}
 
 	return nil
+}
+
+func UpdateCheckRunInProgress(runID string) {
+	run := GetRunByID(runID)
+	if run.GithubCheckRunID != 0 {
+		err := UpdateCheckRun(run.GithubCheckRunID, model.CheckRunPayload{
+			Status: "in_progress",
+			Output: struct {
+				Title   string `json:"title,omitempty"`
+				Summary string `json:"summary,omitempty"`
+				Text    string `json:"text,omitempty"`
+			}{
+				Title:   fmt.Sprintf("MPBench %s Unit Tests", run.Service),
+				Summary: fmt.Sprintf("Run ID: %s\nRunning tests...", run.ID),
+				Text:    "",
+			},
+		})
+		if err != nil {
+			utils.SugarLogger.Error("Failed to update check run", err)
+		}
+	}
+}
+
+func GenerateCheckRunConclusion(runID string) {
+	run := GetRunByID(runID)
+	passed := make([]model.RunTest, 0)
+	partial := make([]model.RunTest, 0)
+	failed := make([]model.RunTest, 0)
+	success := true
+	for _, test := range run.RunTests {
+		if test.Status == "passed" {
+			passed = append(passed, test)
+		} else {
+			numPassed := 0
+			for _, result := range test.RunTestResults {
+				if result.Status == "passed" {
+					numPassed++
+				}
+			}
+			if numPassed == len(run.RunTests) {
+				// all signals passed
+				passed = append(passed, test)
+			} else if numPassed > 0 {
+				// some signals passed
+				partial = append(partial, test)
+			} else {
+				// all signals failed
+				failed = append(failed, test)
+			}
+		}
+	}
+	if len(failed) > 0 || len(partial) > 0 {
+		success = false
+	}
+
+	allTests := run.RunTests
+	sort.Slice(allTests, func(i, j int) bool {
+		return allTests[i].CreatedAt.Before(allTests[j].CreatedAt)
+	})
+	sort.Slice(passed, func(i, j int) bool {
+		return passed[i].CreatedAt.Before(passed[j].CreatedAt)
+	})
+	sort.Slice(partial, func(i, j int) bool {
+		return partial[i].CreatedAt.Before(partial[j].CreatedAt)
+	})
+	sort.Slice(failed, func(i, j int) bool {
+		return failed[i].CreatedAt.Before(failed[j].CreatedAt)
+	})
+
+	textBuffer := bytes.NewBufferString("")
+	textBuffer.WriteString("# Summary\n\n")
+	textBuffer.WriteString("| ID | Name | Status | Progress |\n")
+	textBuffer.WriteString("|----|------|--------|----------|\n")
+	for _, test := range allTests {
+		numPassed := 0
+		total := len(test.RunTestResults)
+		for _, result := range test.RunTestResults {
+			if result.Status == "passed" {
+				numPassed++
+			}
+		}
+		var status string
+		if test.Status == "passed" {
+			status = "✅ PASS"
+		} else if numPassed == 0 {
+			status = "❌ FAIL"
+		} else {
+			status = "⚠️ PARTIAL"
+		}
+		textBuffer.WriteString(fmt.Sprintf("%s | %s | %s | %d/%d (%d%%)\n",
+			test.Name[:6], // ID portion
+			test.Name[7:], // Name portion
+			status,
+			numPassed,
+			total,
+			(numPassed*100)/total))
+	}
+
+	if len(failed) > 0 {
+		textBuffer.WriteString("\n# Failed Tests\n\n")
+		textBuffer.WriteString(RunTestsToResultString(failed))
+	}
+	if len(partial) > 0 {
+		textBuffer.WriteString("\n# Partially Passed Tests\n\n")
+		textBuffer.WriteString(RunTestsToResultString(partial))
+	}
+	if len(passed) > 0 {
+		textBuffer.WriteString("\n# Passed Tests\n\n")
+		textBuffer.WriteString(RunTestsToResultString(passed))
+	}
+
+	if success {
+		payload := model.CheckRunPayload{
+			Name:       run.Name,
+			Status:     "completed",
+			Conclusion: "success",
+			Output: struct {
+				Title   string `json:"title,omitempty"`
+				Summary string `json:"summary,omitempty"`
+				Text    string `json:"text,omitempty"`
+			}{
+				Title:   fmt.Sprintf("MPBench %s Unit Tests", run.Service),
+				Summary: fmt.Sprintf("Run ID: %s\n✅ %d tests passed\n⚠️ %d tests partially passed\n❌ %d tests failed", run.ID, len(passed), len(partial), len(failed)),
+				Text:    textBuffer.String(),
+			},
+		}
+		UpdateCheckRun(run.GithubCheckRunID, payload)
+	} else {
+		payload := model.CheckRunPayload{
+			Name:       run.Name,
+			Status:     "completed",
+			Conclusion: "failure",
+			Output: struct {
+				Title   string `json:"title,omitempty"`
+				Summary string `json:"summary,omitempty"`
+				Text    string `json:"text,omitempty"`
+			}{
+				Title:   fmt.Sprintf("MPBench %s Unit Tests", run.Service),
+				Summary: fmt.Sprintf("Run ID: %s\n✅ %d tests passed\n⚠️ %d tests partially passed\n❌ %d tests failed", run.ID, len(passed), len(partial), len(failed)),
+				Text:    textBuffer.String(),
+			},
+		}
+		UpdateCheckRun(run.GithubCheckRunID, payload)
+	}
+}
+
+func RunTestsToResultString(run_test []model.RunTest) string {
+	textBuffer := bytes.NewBufferString("")
+	for _, test := range run_test {
+		textBuffer.WriteString(fmt.Sprintf("### %s\n\n", test.Name))
+		textBuffer.WriteString(fmt.Sprintf("Input Data: `%s`\n", test.Data))
+		textBuffer.WriteString("\n| Signal Name | Decoded Value | Expected Value | Status |\n")
+		textBuffer.WriteString("|------------|---------------|----------------|---------|\n")
+		for _, result := range test.RunTestResults {
+			if result.Status == "failed" {
+				textBuffer.WriteString(fmt.Sprintf("| %s | %s | %s | %s |\n",
+					result.SignalName,
+					result.Value,
+					result.Expected,
+					"❌"))
+			} else {
+				textBuffer.WriteString(fmt.Sprintf("| %s | %s | %s | %s |\n",
+					result.SignalName,
+					result.Value,
+					result.Expected,
+					"✅"))
+			}
+		}
+	}
+	return textBuffer.String()
 }

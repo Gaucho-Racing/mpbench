@@ -79,18 +79,27 @@ func CreateRun(run model.Run) error {
 func GetAllRunTests() []model.RunTest {
 	var runTests []model.RunTest
 	database.DB.Find(&runTests)
+	for i, runTest := range runTests {
+		runTest.RunTestResults = GetRunTestResultsByRunTestID(runTest.ID)
+		runTests[i] = runTest
+	}
 	return runTests
 }
 
 func GetRunTestsByRunID(runID string) []model.RunTest {
 	var runTests []model.RunTest
 	database.DB.Where("run_id = ?", runID).Find(&runTests)
+	for i, runTest := range runTests {
+		runTest.RunTestResults = GetRunTestResultsByRunTestID(runTest.ID)
+		runTests[i] = runTest
+	}
 	return runTests
 }
 
 func GetRunTestByID(id string) model.RunTest {
 	var runTest model.RunTest
 	database.DB.First(&runTest, "id = ?", id)
+	runTest.RunTestResults = GetRunTestResultsByRunTestID(runTest.ID)
 	return runTest
 }
 
