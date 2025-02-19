@@ -23,6 +23,10 @@ FROM alpine:3.21
 RUN apk add --no-cache git
 RUN apk add --no-cache docker
 
+# Script to handle docker login
+COPY docker-login.sh /docker-login.sh
+RUN chmod +x /docker-login.sh
+
 WORKDIR /
 
 COPY --from=builder /mpbench /mpbench
@@ -30,4 +34,5 @@ COPY --from=builder /mpbench /mpbench
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 ENV TZ=America/Los_Angeles
 
-ENTRYPOINT ["/mpbench"]
+# Use shell form to allow environment variable expansion
+ENTRYPOINT ["/bin/sh", "-c", "/docker-login.sh && /mpbench"]
