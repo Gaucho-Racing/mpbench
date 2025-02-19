@@ -84,7 +84,13 @@ func StartRun(run model.Run) {
 		return
 	}
 	db.Exec("CREATE DATABASE IF NOT EXISTS mapache")
-	db.Exec("USE mapache")
+
+	// Replace db connection with new mapache db connection
+	db, err = database.ConnectDB("root", "password", localhost, strconv.Itoa(dbPort), "mapache")
+	if err != nil {
+		utils.SugarLogger.Error("Failed to connect to mapache database", err)
+		return
+	}
 	db.AutoMigrate(&mapache.Signal{})
 
 	// Start Mapache service container

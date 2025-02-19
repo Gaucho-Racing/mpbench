@@ -84,7 +84,7 @@ func (m MessageTest) Run(run model.Run, mqttClient *mq.Client, db *gorm.DB) bool
 }
 
 func WaitForSignals(numSignals int, timestamp int64, db *gorm.DB) {
-	timeout := time.After(10 * time.Second)
+	timeout := time.After(20 * time.Second)
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
 
