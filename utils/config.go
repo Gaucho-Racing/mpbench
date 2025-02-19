@@ -39,4 +39,8 @@ func VerifyConfig() {
 		config.DatabaseName = "mpbench"
 		SugarLogger.Infof("DATABASE_NAME is not set, defaulting to %s", config.DatabaseName)
 	}
+	if config.MaxWorkers == "" {
+		config.MaxWorkers = "10"
+		SugarLogger.Infof("MAX_WORKERS is not set, defaulting to %s", config.MaxWorkers)
+	}
 }

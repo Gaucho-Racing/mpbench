@@ -19,3 +19,5 @@ var GithubAppClientID = os.Getenv("GITHUB_APP_CLIENT_ID")
 var GithubAppAccessToken = os.Getenv("GITHUB_APP_ACCESS_TOKEN")
 var GithubAppInstallationID = os.Getenv("GITHUB_APP_INSTALLATION_ID")
 var GithubAppPrivateKey = os.Getenv("GITHUB_APP_PRIVATE_KEY")
+
+var MaxWorkers = os.Getenv("MAX_WORKERS")

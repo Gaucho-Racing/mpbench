@@ -9,6 +9,7 @@ import (
 	"mpbench/service"
 	"mpbench/utils"
 	"strconv"
+	"strings"
 	"time"
 
 	mq "github.com/eclipse/paho.mqtt.golang"
@@ -21,6 +22,12 @@ import (
 func RunTestSuite(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	if run.Service == "gr25" {
 		StartGR25Tests(run, mqttClient, db)
+	}
+}
+
+func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
+	if run.Service == "gr25" {
+		// StartGR25Tests(run, mqttClient, db)
 	}
 }
 
@@ -84,7 +91,14 @@ func StartRun(run model.Run) {
 	service.CreateRun(run)
 	time.Sleep(2 * time.Second)
 
-	RunTestSuite(run, mqttClient, db)
+	if strings.Contains(run.Name, "benchmark") {
+		RunBenchmark(run, mqttClient, db)
+	} else if strings.Contains(run.Name, "unit") {
+		RunTestSuite(run, mqttClient, db)
+	} else {
+		utils.SugarLogger.Error("Unknown run type", run.Name)
+		return
+	}
 	FinishRun(run.ID)
 }
 

@@ -15,7 +15,6 @@ import (
 func GithubEventHandler(c *gin.Context) {
 	ghEventType := c.Request.Header.Get("X-GitHub-Event")
 	if ghEventType == "check_suite" {
-		utils.SugarLogger.Infof("Check suite event received")
 		var checkSuiteEvent model.GithubCheckSuiteEvent
 		if err := c.ShouldBindJSON(&checkSuiteEvent); err != nil {
 			utils.SugarLogger.Errorf("Error parsing check suite event: %v", err)
@@ -25,15 +24,8 @@ func GithubEventHandler(c *gin.Context) {
 			return
 		}
 
-		// Print headers
-		for key, values := range c.Request.Header {
-			for _, value := range values {
-				utils.SugarLogger.Infof("Header %s: %s", key, value)
-			}
-		}
-
-		utils.SugarLogger.Infof("Check suite event: %+v", checkSuiteEvent)
-		if checkSuiteEvent.CheckSuite.Status == "completed" {
+		utils.SugarLogger.Infof("Check suite event: %s", checkSuiteEvent.Action)
+		if checkSuiteEvent.Action != "requested" && checkSuiteEvent.Action != "rerequested" {
 			return
 		}
 
@@ -43,7 +35,7 @@ func GithubEventHandler(c *gin.Context) {
 				utils.SugarLogger.Errorf("Error creating check run: %v", err)
 				return
 			}
-			utils.SugarLogger.Infof("Check run created with ID: %s", id)
+			utils.SugarLogger.Infof("Check run created with ID: %d", id)
 
 			run := model.Run{
 				ID:               uuid.New().String(),
@@ -54,11 +46,10 @@ func GithubEventHandler(c *gin.Context) {
 				GithubCheckRunID: id,
 			}
 			service.CreateRun(run)
-			runner.StartRun(run)
+			runner.Queue.Add(run)
 		}()
 
 	} else if ghEventType == "check_run" {
-		utils.SugarLogger.Infof("Check run event received")
 		var checkRunEvent model.GithubCheckRunEvent
 		if err := c.ShouldBindJSON(&checkRunEvent); err != nil {
 			utils.SugarLogger.Errorf("Error parsing check run event: %v", err)
@@ -68,14 +59,30 @@ func GithubEventHandler(c *gin.Context) {
 			return
 		}
 
-		// Print headers
-		for key, values := range c.Request.Header {
-			for _, value := range values {
-				utils.SugarLogger.Infof("Header %s: %s", key, value)
-			}
+		utils.SugarLogger.Infof("Check run event: %s", checkRunEvent.Action)
+		if checkRunEvent.Action != "rerequested" {
+			return
 		}
 
-		utils.SugarLogger.Infof("Check run event: %+v", checkRunEvent)
+		go func() {
+			id, err := service.CreateCheckRun(checkRunEvent.CheckRun.HeadSha)
+			if err != nil {
+				utils.SugarLogger.Errorf("Error creating check run: %v", err)
+				return
+			}
+			utils.SugarLogger.Infof("Check run created with ID: %d", id)
+
+			run := model.Run{
+				ID:               uuid.New().String(),
+				Commit:           checkRunEvent.CheckRun.HeadSha,
+				Status:           "queued",
+				Name:             "mpbench / unit",
+				Service:          "gr25",
+				GithubCheckRunID: id,
+			}
+			service.CreateRun(run)
+			runner.Queue.Add(run)
+		}()
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Github event received"})
