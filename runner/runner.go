@@ -3,6 +3,7 @@ package runner
 import (
 	"context"
 	"fmt"
+	"mpbench/config"
 	"mpbench/database"
 	"mpbench/model"
 	"mpbench/mqtt"
@@ -64,13 +65,19 @@ func StartRun(run model.Run) {
 	defer mqttContainer.Terminate(ctx)
 	defer singleStoreContainer.Terminate(ctx)
 
-	mqttClient, err := mqtt.ConnectMQTT("localhost", mqttPort, "mpbench")
+	// Assume docker runtime when running in prod
+	localhost := "localhost"
+	if config.Env == "PROD" {
+		localhost = "host.docker.internal"
+	}
+
+	mqttClient, err := mqtt.ConnectMQTT(localhost, mqttPort, "mpbench")
 	if err != nil {
 		utils.SugarLogger.Error("Failed to connect to MQTT", err)
 		return
 	}
 
-	db, err := database.ConnectDB("root", "password", "localhost", strconv.Itoa(dbPort), "information_schema")
+	db, err := database.ConnectDB("root", "password", localhost, strconv.Itoa(dbPort), "information_schema")
 	if err != nil {
 		utils.SugarLogger.Error("Failed to connect to database", err)
 		return

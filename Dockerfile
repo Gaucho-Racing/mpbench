@@ -24,7 +24,7 @@ RUN apk add --no-cache git
 RUN apk add --no-cache docker
 
 # Script to handle docker login
-COPY docker-login.sh /docker-login.sh
+COPY scripts/docker-login.sh /docker-login.sh
 RUN chmod +x /docker-login.sh
 
 WORKDIR /
