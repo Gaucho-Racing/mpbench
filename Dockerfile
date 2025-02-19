@@ -19,6 +19,9 @@ RUN GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o /mpbench
 ##
 FROM alpine:3.21
 
+# Install git and docker client
+RUN apk add --no-cache git docker-cli
+
 WORKDIR /
 
 COPY --from=builder /mpbench /mpbench
