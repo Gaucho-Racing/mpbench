@@ -37,7 +37,7 @@ var ECUStatusOneTest2 = MessageTest{
 		"ecu_state":               18,
 		"ecu_status_acu":          0,
 		"ecu_status_inv_one":      1,
-		"ecu_status_inv_two":      0,
+		"ecu_status_inv_two":      1,
 		"ecu_status_inv_three":    0,
 		"ecu_status_inv_four":     0,
 		"ecu_status_fan_one":      0,

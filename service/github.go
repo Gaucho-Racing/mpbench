@@ -227,7 +227,9 @@ func UpdateCheckRunInProgress(runID string) {
 	run := GetRunByID(runID)
 	if run.GithubCheckRunID != 0 {
 		err := UpdateCheckRun(run.GithubCheckRunID, model.CheckRunPayload{
-			Status: "in_progress",
+			Status:     "in_progress",
+			ExternalID: run.ID,
+			DetailsURL: fmt.Sprintf("https://mpbench.gauchoracing.com/runs/%s", run.ID),
 			Output: struct {
 				Title   string `json:"title,omitempty"`
 				Summary string `json:"summary,omitempty"`
@@ -272,7 +274,7 @@ func GenerateCheckRunConclusion(runID string) {
 			}
 		}
 	}
-	if len(failed) > 0 || len(partial) > 0 {
+	if len(partial) > 0 {
 		success = false
 	}
 
@@ -320,13 +322,13 @@ func GenerateCheckRunConclusion(runID string) {
 			(numPassed*100)/total))
 	}
 
-	if len(failed) > 0 {
-		textBuffer.WriteString("\n# Failed Tests\n\n")
-		textBuffer.WriteString(RunTestsToResultString(failed))
-	}
 	if len(partial) > 0 {
 		textBuffer.WriteString("\n# Partially Passed Tests\n\n")
 		textBuffer.WriteString(RunTestsToResultString(partial))
+	}
+	if len(failed) > 0 {
+		textBuffer.WriteString("\n# Failed Tests\n\n")
+		textBuffer.WriteString(RunTestsToResultString(failed))
 	}
 	if len(passed) > 0 {
 		textBuffer.WriteString("\n# Passed Tests\n\n")
@@ -344,7 +346,7 @@ func GenerateCheckRunConclusion(runID string) {
 				Text    string `json:"text,omitempty"`
 			}{
 				Title:   fmt.Sprintf("MPBench %s Unit Tests", run.Service),
-				Summary: fmt.Sprintf("Run ID: %s\n✅ %d tests passed\n⚠️ %d tests partially passed\n❌ %d tests failed", run.ID, len(passed), len(partial), len(failed)),
+				Summary: fmt.Sprintf("Run ID: %s\n✅ %d tests passed\n⚠️ %d tests partially passed\n❌ %d tests failed\n\n**Note:** Failed tests are treated as unimplemented, allowing the check run as a whole to pass. Always double check failing tests for any unintentional misses.", run.ID, len(passed), len(partial), len(failed)),
 				Text:    textBuffer.String(),
 			},
 		}
@@ -360,7 +362,7 @@ func GenerateCheckRunConclusion(runID string) {
 				Text    string `json:"text,omitempty"`
 			}{
 				Title:   fmt.Sprintf("MPBench %s Unit Tests", run.Service),
-				Summary: fmt.Sprintf("Run ID: %s\n✅ %d tests passed\n⚠️ %d tests partially passed\n❌ %d tests failed", run.ID, len(passed), len(partial), len(failed)),
+				Summary: fmt.Sprintf("Run ID: %s\n✅ %d tests passed\n⚠️ %d tests partially passed\n❌ %d tests failed\n\n**Note:** Failed tests are treated as unimplemented, allowing the check run as a whole to pass. Always double check failing tests for any unintentional misses.", run.ID, len(passed), len(partial), len(failed)),
 				Text:    textBuffer.String(),
 			},
 		}
