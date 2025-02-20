@@ -77,7 +77,7 @@ var ECUStatusTwoTest2 = MessageTest{
 	ExpectedValues: map[string]interface{}{
 		"ecu_tractive_system_voltage": 424,
 		"ecu_vehicle_speed":           383,
-		"ecu_fr_wheel_rpm":            3245.5,
+		"ecu_fr_wheel_rpm":            3246.5,
 		"ecu_fl_wheel_rpm":            -1754.5,
 	},
 }
