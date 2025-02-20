@@ -323,7 +323,7 @@ func GenerateCheckRunConclusion(runID string) {
 	}
 
 	if len(partial) > 0 {
-		textBuffer.WriteString("\n# Partially Passed Tests\n\n")
+		textBuffer.WriteString("\n# Partially Failed Tests\n\n")
 		textBuffer.WriteString(RunTestsToResultString(partial))
 	}
 	if len(failed) > 0 {
