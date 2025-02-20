@@ -14,6 +14,7 @@ import (
 	"os"
 	"os/exec"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -277,16 +278,16 @@ func GenerateCheckRunConclusion(runID string) {
 
 	allTests := run.RunTests
 	sort.Slice(allTests, func(i, j int) bool {
-		return allTests[i].CreatedAt.Before(allTests[j].CreatedAt)
+		return allTests[i].Name < allTests[j].Name
 	})
 	sort.Slice(passed, func(i, j int) bool {
-		return passed[i].CreatedAt.Before(passed[j].CreatedAt)
+		return passed[i].Name < passed[j].Name
 	})
 	sort.Slice(partial, func(i, j int) bool {
-		return partial[i].CreatedAt.Before(partial[j].CreatedAt)
+		return partial[i].Name < partial[j].Name
 	})
 	sort.Slice(failed, func(i, j int) bool {
-		return failed[i].CreatedAt.Before(failed[j].CreatedAt)
+		return failed[i].Name < failed[j].Name
 	})
 
 	textBuffer := bytes.NewBufferString("")
@@ -309,9 +310,10 @@ func GenerateCheckRunConclusion(runID string) {
 		} else {
 			status = "⚠️ PARTIAL"
 		}
+		parts := strings.SplitN(test.Name, " ", 2) // Split on first space only
 		textBuffer.WriteString(fmt.Sprintf("%s | %s | %s | %d/%d (%d%%)\n",
-			test.Name[:6], // ID portion
-			test.Name[7:], // Name portion
+			parts[0], // hex ID (e.g., "0x003")
+			parts[1], // actual name
 			status,
 			numPassed,
 			total,
