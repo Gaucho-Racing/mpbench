@@ -70,6 +70,18 @@ var ECUStatusTwoTest1 = MessageTest{
 	},
 }
 
+var ECUStatusTwoTest2 = MessageTest{
+	ID:   0x004,
+	Name: "ECU Status Two Test 2",
+	Data: []byte{0xa0, 0xa5, 0x9c, 0x95, 0xd1, 0xfe, 0x77, 0x3b},
+	ExpectedValues: map[string]interface{}{
+		"ecu_tractive_system_voltage": 424,
+		"ecu_vehicle_speed":           383,
+		"ecu_fr_wheel_rpm":            3245.5,
+		"ecu_fl_wheel_rpm":            -1754.5,
+	},
+}
+
 var ECUStatusThreeTest1 = MessageTest{
 	ID:   0x005,
 	Name: "ECU Status Three Test 1",
@@ -77,5 +89,15 @@ var ECUStatusThreeTest1 = MessageTest{
 	ExpectedValues: map[string]interface{}{
 		"ecu_rr_wheel_rpm": -3276.8,
 		"ecu_rl_wheel_rpm": -3276.8,
+	},
+}
+
+var ECUStatusThreeTest2 = MessageTest{
+	ID:   0x005,
+	Name: "ECU Status Three Test 2",
+	Data: []byte{0xfe, 0xf4, 0x9e, 0xb0},
+	ExpectedValues: map[string]interface{}{
+		"ecu_rr_wheel_rpm": 2995,
+		"ecu_rl_wheel_rpm": 1244.6,
 	},
 }

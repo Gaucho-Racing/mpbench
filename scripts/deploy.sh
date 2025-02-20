@@ -37,3 +37,6 @@ git push origin v$VERSION
 gh release create v$VERSION --generate-notes
 
 echo "Package released successfully for version $VERSION"
+
+echo "Restarting service on gr-verstappen ec2 instance"
+sudo ssh -i ~/.ssh/bharat-verstappen.pem ec2-user@verstappen-ec2.gauchoracing.com "cd verstappen-infra && git pull && docker compose -f mpbench.yml down && docker compose -f mpbench.yml pull && docker compose -f mpbench.yml up -d"

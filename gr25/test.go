@@ -20,7 +20,9 @@ var Tests = []MessageTest{
 	ECUStatusOneTest1,
 	ECUStatusOneTest2,
 	ECUStatusTwoTest1,
+	ECUStatusTwoTest2,
 	ECUStatusThreeTest1,
+	ECUStatusThreeTest2,
 }
 
 func RunTests(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
