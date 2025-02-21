@@ -67,16 +67,18 @@ func (m MessageTest) Run(run model.Run, mqttClient *mq.Client, db *gorm.DB) bool
 	SendMqttMessage(mqttClient, fmt.Sprintf("gr25/%s/%03x", VehicleID, m.ID), result)
 	WaitForSignals(len(m.ExpectedValues), timestamp, db)
 	status := m.Verify(run_test, db, timestamp)
-	if !status {
+	if status == "passed" {
+		utils.SugarLogger.Infof("✅ TEST PASSED: 0x%03x %s", m.ID, m.Name)
+		run_test.Status = "passed"
+	} else if status == "partial" {
+		utils.SugarLogger.Infof("⚠️ TEST PARTIAL: 0x%03x %s", m.ID, m.Name)
+		run_test.Status = "partial"
+	} else {
 		utils.SugarLogger.Infof("❌ TEST FAILED: 0x%03x %s", m.ID, m.Name)
 		run_test.Status = "failed"
-		service.CreateRunTest(run_test)
-		return false
 	}
-	utils.SugarLogger.Infof("✅ TEST PASSED: 0x%03x %s", m.ID, m.Name)
-	run_test.Status = "passed"
 	service.CreateRunTest(run_test)
-	return true
+	return status == "passed"
 }
 
 func WaitForSignals(numSignals int, timestamp int64, db *gorm.DB) {
@@ -108,7 +110,7 @@ func getSignalCount(timestamp int64, db *gorm.DB) int64 {
 	return count
 }
 
-func (m MessageTest) Verify(run_test model.RunTest, db *gorm.DB, timestamp int64) bool {
+func (m MessageTest) Verify(run_test model.RunTest, db *gorm.DB, timestamp int64) string {
 	failedSignals := []string{}
 	for key, value := range m.ExpectedValues {
 		valueFloat, ok := value.(float64)
@@ -154,7 +156,13 @@ func (m MessageTest) Verify(run_test model.RunTest, db *gorm.DB, timestamp int64
 		}
 	}
 	utils.SugarLogger.Infof("Correctly ingested %d/%d signals", len(m.ExpectedValues)-len(failedSignals), len(m.ExpectedValues))
-	return len(failedSignals) == 0
+	if len(failedSignals) == 0 {
+		return "passed"
+	} else if len(failedSignals) < len(m.ExpectedValues) {
+		return "partial"
+	} else {
+		return "failed"
+	}
 }
 
 func SendMqttMessage(mqttClient *mq.Client, topic string, message []byte) {

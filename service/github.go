@@ -255,25 +255,15 @@ func GenerateCheckRunConclusion(runID string) {
 	for _, test := range run.RunTests {
 		if test.Status == "passed" {
 			passed = append(passed, test)
+		} else if test.Status == "partial" {
+			partial = append(partial, test)
 		} else {
-			numPassed := 0
-			for _, result := range test.RunTestResults {
-				if result.Status == "passed" {
-					numPassed++
-				}
-			}
-			if numPassed == len(run.RunTests) {
-				// all signals passed
-				passed = append(passed, test)
-			} else if numPassed > 0 {
-				// some signals passed
-				partial = append(partial, test)
-			} else {
-				// all signals failed
-				failed = append(failed, test)
-			}
+			failed = append(failed, test)
 		}
 	}
+
+	// For the github check run, we only fail if there are any partial failures
+	// Full fails are considered unimplemented and are ignored
 	if len(partial) > 0 {
 		success = false
 	}
