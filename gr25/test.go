@@ -38,6 +38,8 @@ const UploadKey = 10310
 type MessageTest struct {
 	// ID is the CAN ID of the message
 	ID int
+	// Node is the node that the message is sent from
+	Node string
 	// Name is a public-facing name for the test
 	Name string
 	// Data is the data contained in the message
@@ -64,7 +66,7 @@ func (m MessageTest) Run(run model.Run, mqttClient *mq.Client, db *gorm.DB) bool
 	}
 	service.CreateRunTest(run_test)
 
-	SendMqttMessage(mqttClient, fmt.Sprintf("gr25/%s/%03x", VehicleID, m.ID), result)
+	SendMqttMessage(mqttClient, fmt.Sprintf("gr25/%s/%s/%03x", VehicleID, m.Node, m.ID), result)
 	WaitForSignals(len(m.ExpectedValues), timestamp, db)
 	status := m.Verify(run_test, db, timestamp)
 	if status == "passed" {

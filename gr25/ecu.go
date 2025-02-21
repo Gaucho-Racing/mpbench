@@ -13,6 +13,7 @@ func GenerateECUTests() []MessageTest {
 	}
 
 	for i := range tests {
+		tests[i].Node = "ecu"
 		tests[i].Name = fmt.Sprintf("ECU → %s", tests[i].Name)
 		newExpectedValues := make(map[string]interface{})
 		for k, v := range tests[i].ExpectedValues {
