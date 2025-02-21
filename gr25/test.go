@@ -16,20 +16,14 @@ import (
 	"gorm.io/gorm"
 )
 
-var Tests = []MessageTest{
-	ECUStatusOneTest1,
-	ECUStatusOneTest2,
-	ECUStatusTwoTest1,
-	ECUStatusTwoTest2,
-	ECUStatusThreeTest1,
-	ECUStatusThreeTest2,
-}
-
 func RunTests(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
-	wg := sync.WaitGroup{}
-	wg.Add(len(Tests))
+	var tests = []MessageTest{}
+	tests = append(tests, GenerateECUTests()...)
 
-	for _, test := range Tests {
+	wg := sync.WaitGroup{}
+	wg.Add(len(tests))
+
+	for _, test := range tests {
 		go func(test MessageTest) {
 			test.Run(run, mqttClient, db)
 			wg.Done()
