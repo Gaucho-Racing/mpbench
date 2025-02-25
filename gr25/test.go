@@ -3,6 +3,7 @@ package gr25
 import (
 	"encoding/binary"
 	"fmt"
+	"math/rand"
 	"mpbench/model"
 	"mpbench/mqtt"
 	"mpbench/service"
@@ -27,7 +28,8 @@ func RunTests(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 		go func(test MessageTest) {
 			test.Run(run, mqttClient, db)
 			// Stagger tests to avoid timestamp collisions
-			time.Sleep(100 * time.Millisecond)
+			randomDelay := time.Duration(100+rand.Intn(400)) * time.Millisecond
+			time.Sleep(randomDelay)
 			wg.Done()
 		}(test)
 	}
