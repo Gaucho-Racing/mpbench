@@ -25,11 +25,11 @@ func RunTests(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	wg.Add(len(tests))
 
 	for _, test := range tests {
+		// Stagger tests to avoid timestamp collisions
+		randomDelay := time.Duration(100+rand.Intn(400)) * time.Millisecond
+		time.Sleep(randomDelay)
 		go func(test MessageTest) {
 			test.Run(run, mqttClient, db)
-			// Stagger tests to avoid timestamp collisions
-			randomDelay := time.Duration(100+rand.Intn(400)) * time.Millisecond
-			time.Sleep(randomDelay)
 			wg.Done()
 		}(test)
 	}
