@@ -116,7 +116,7 @@ var ACUStatusOneTest1 = MessageTest{
 }
 
 var ACUStatusOneTest2 = MessageTest{
-	ID: 0x008,
+	ID: 0x007,
 	Name: "ACU Status One Test 1",
 	Data: []byte{0x84, 0x07, 0xd7, 0x12, 0xbf, 0x63, 0x80, 0xf3},
 	ExpectedValues: map[string]interface{}{
@@ -125,5 +125,55 @@ var ACUStatusOneTest2 = MessageTest{
 		"accumulator_current": -72.33,
 		"accumulator_soc": 31.372,
 		"glv_soc": 95.294,
+	},
+}
+
+var ACUStatusTwoTest1 = MessageTest{
+	ID: 0x008,
+	Name: "ACU Status Two Test 1",
+	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"20v_voltage": 0,
+		"12v_voltage": 0,
+		"sdc_voltage": 0,
+		"min_cell_voltage": 2,
+		"max_cell_temp": 0,
+		"over_temp_error": 0,
+		"over_voltage_error": 0,
+		"under_voltage_error": 0,
+		"over_current_error": 0,
+		"under_current_error": 0,
+		"under_voltage_20v_warning": 0,
+		"under_voltage_12v_warning": 0,
+		"under_voltage_sdc_warning": 0,
+		"precharge_error": 0,
+		"ir_minus_state": 0,
+		"ir_plus_state": 0,
+		"software_latch": 0,
+	},
+}
+
+var ACUStatusTwoTest2 = MessageTest{
+	ID: 0x008,
+	Name: "ACU Status Two Test 2",
+	Data: []byte{0xbd, 0x66, 0x10, 0x28, 0xcc, 0x96, 0x0c},
+	ExpectedValues: map[string]interface{}{
+		"20v_voltage": 18.9,
+		"12v_voltage": 10.2,
+		"sdc_voltage": 1.6,
+		"min_cell_voltage": 6,
+		"max_cell_temp": 51,
+		"over_temp_error": 0,
+		"over_voltage_error": 1,
+		"under_voltage_error": 1,
+		"over_current_error": 0,
+		"under_current_error": 1,
+		"under_voltage_20v_warning": 0,
+		"under_voltage_12v_warning": 0,
+		"under_voltage_sdc_warning": 1,
+		"precharge_error": 0,
+		"ir_minus_state": 0,
+		"ir_plus_state": 1,
+		"software_latch": 1,
 	},
 }
