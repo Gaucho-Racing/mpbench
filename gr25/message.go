@@ -101,3 +101,29 @@ var ECUStatusThreeTest2 = MessageTest{
 		"rl_wheel_rpm": 1244.6,
 	},
 }
+
+var ACUStatusOneTest1 = MessageTest{
+	ID: 0x007,
+	Name: "ACU Status One Test 1",
+	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"accumulator_voltage": 0,
+		"ts_voltage": 0,
+		"accumulator_current": -327.68,
+		"accumulator_soc": 0,
+		"glv_soc": 0,
+	},
+}
+
+var ACUStatusOneTest2 = MessageTest{
+	ID: 0x008,
+	Name: "ACU Status One Test 1",
+	Data: []byte{0x84, 0x07, 0xd7, 0x12, 0xbf, 0x63, 0x80, 0xf3},
+	ExpectedValues: map[string]interface{}{
+		"accumulator_voltage": 19.24,
+		"ts_voltage": 48.23,
+		"accumulator_current": -72.33,
+		"accumulator_soc": 31.372,
+		"glv_soc": 95.294,
+	},
+}
