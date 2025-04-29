@@ -37,6 +37,7 @@ func StartRun(run model.Run) {
 	if run.GithubCheckRunID != 0 {
 		service.UpdateCheckRunInProgress(run.ID)
 	}
+	defer FinishRun(run.ID)
 
 	utils.SugarLogger.Infof("Initializing Run %s (%s) at commit %s", run.ID, run.Service, run.Commit)
 	run.Status = "building"
@@ -113,24 +114,28 @@ func StartRun(run model.Run) {
 		utils.SugarLogger.Error("Unknown run type", run.Name)
 		return
 	}
-	FinishRun(run.ID)
 }
 
 func FinishRun(runID string) {
 	run := service.GetRunByID(runID)
-	success := true
-	for _, test := range run.RunTests {
-		if test.Status != "passed" {
-			success = false
-			break
-		}
-	}
-	if success {
-		run.Status = "passed"
-	} else {
+	if len(run.RunTests) == 0 {
 		run.Status = "failed"
+		service.CreateRun(run)
+	} else {
+		success := true
+		for _, test := range run.RunTests {
+			if test.Status != "passed" {
+				success = false
+				break
+			}
+		}
+		if success {
+			run.Status = "passed"
+		} else {
+			run.Status = "failed"
+		}
+		service.CreateRun(run)
 	}
-	service.CreateRun(run)
 	if run.GithubCheckRunID != 0 {
 		service.GenerateCheckRunConclusion(run.ID)
 	}
