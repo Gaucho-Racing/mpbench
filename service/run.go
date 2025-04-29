@@ -9,7 +9,7 @@ import (
 
 func GetAllRuns() []model.Run {
 	var runs []model.Run
-	database.DB.Find(&runs)
+	database.DB.Order("created_at DESC").Find(&runs)
 	for i, run := range runs {
 		run.RunTests = GetRunTestsByRunID(run.ID)
 		runs[i] = run
@@ -19,7 +19,7 @@ func GetAllRuns() []model.Run {
 
 func GetRunsByCommit(commit string) []model.Run {
 	var runs []model.Run
-	database.DB.Where("commit = ?", commit).Find(&runs)
+	database.DB.Where("commit = ?", commit).Order("created_at DESC").Find(&runs)
 	for i, run := range runs {
 		run.RunTests = GetRunTestsByRunID(run.ID)
 		runs[i] = run
@@ -29,7 +29,7 @@ func GetRunsByCommit(commit string) []model.Run {
 
 func GetRunsByService(service string) []model.Run {
 	var runs []model.Run
-	database.DB.Where("service = ?", service).Find(&runs)
+	database.DB.Where("service = ?", service).Order("created_at DESC").Find(&runs)
 	for i, run := range runs {
 		run.RunTests = GetRunTestsByRunID(run.ID)
 		runs[i] = run
@@ -39,7 +39,7 @@ func GetRunsByService(service string) []model.Run {
 
 func GetRunsByStatus(status string) []model.Run {
 	var runs []model.Run
-	database.DB.Where("status = ?", status).Find(&runs)
+	database.DB.Where("status = ?", status).Order("created_at DESC").Find(&runs)
 	for i, run := range runs {
 		run.RunTests = GetRunTestsByRunID(run.ID)
 		runs[i] = run
@@ -78,7 +78,7 @@ func CreateRun(run model.Run) error {
 
 func GetAllRunTests() []model.RunTest {
 	var runTests []model.RunTest
-	database.DB.Find(&runTests)
+	database.DB.Order("created_at DESC").Find(&runTests)
 	for i, runTest := range runTests {
 		runTest.RunTestResults = GetRunTestResultsByRunTestID(runTest.ID)
 		runTests[i] = runTest
@@ -88,7 +88,7 @@ func GetAllRunTests() []model.RunTest {
 
 func GetRunTestsByRunID(runID string) []model.RunTest {
 	var runTests []model.RunTest
-	database.DB.Where("run_id = ?", runID).Find(&runTests)
+	database.DB.Where("run_id = ?", runID).Order("created_at ASC").Find(&runTests)
 	for i, runTest := range runTests {
 		runTest.RunTestResults = GetRunTestResultsByRunTestID(runTest.ID)
 		runTests[i] = runTest
@@ -124,13 +124,13 @@ func CreateRunTest(runTest model.RunTest) error {
 
 func GetAllRunTestResults() []model.RunTestResult {
 	var runTestResults []model.RunTestResult
-	database.DB.Find(&runTestResults)
+	database.DB.Order("created_at DESC").Find(&runTestResults)
 	return runTestResults
 }
 
 func GetRunTestResultsByRunTestID(runTestID string) []model.RunTestResult {
 	var runTestResults []model.RunTestResult
-	database.DB.Where("run_test_id = ?", runTestID).Find(&runTestResults)
+	database.DB.Where("run_test_id = ?", runTestID).Order("created_at ASC").Find(&runTestResults)
 	return runTestResults
 }
 
