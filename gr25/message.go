@@ -177,3 +177,27 @@ var ACUStatusTwoTest2 = MessageTest{
 		"software_latch": 1,
 	},
 }
+
+var ACUStatusThreeTest1 = MessageTest{
+	ID: 0x009,
+	Name: "ACU Status Three Test 1",
+	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"hv_input_voltage": 0,
+		"hv_output_voltage": 0,
+		"hv_input_current": 0,
+		"hv_output_current": 0,
+	},
+}
+
+var ACUStatusThreeTest2 = MessageTest{
+	ID: 0x009,
+	Name: "ACU Status Three Test 2",
+	Data: []byte{0xff, 0xff, 0x7c, 0xea, 0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"hv_input_voltage": 655.35,
+		"hv_output_voltage": 600.28,
+		"hv_input_current": 0,
+		"hv_output_current": 0,
+	},
+}
