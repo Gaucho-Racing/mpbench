@@ -12,7 +12,7 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: "/run/:id",
+    path: "/runs/:id",
     element: <RunDetailsPage />,
   },
 ]);

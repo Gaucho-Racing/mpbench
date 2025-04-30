@@ -49,7 +49,7 @@ function App() {
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {inProgressRuns.length > 0 ? (
                 inProgressRuns.map((run: Run) => (
-                  <div key={run.id} onClick={() => navigate(`/run/${run.id}`)}>
+                  <div key={run.id} onClick={() => navigate(`/runs/${run.id}`)}>
                     <RunCard run={run} />
                   </div>
                 ))
@@ -67,7 +67,7 @@ function App() {
                     run.status === "passed" || run.status === "failed",
                 )
                 .map((run: Run) => (
-                  <div key={run.id} onClick={() => navigate(`/run/${run.id}`)}>
+                  <div key={run.id} onClick={() => navigate(`/runs/${run.id}`)}>
                     <RunCard run={run} />
                   </div>
                 ))}
