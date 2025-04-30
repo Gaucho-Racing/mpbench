@@ -10,8 +10,10 @@ import { getAxiosErrorMessage } from "@/lib/axios-error-handler";
 import { Run } from "@/models/run";
 import { RunCard } from "@/components/RunCard";
 import { NoActiveTestsCard } from "@/components/NoActiveTestsCard";
+import { useNavigate } from "react-router-dom";
 
 function App() {
+  const navigate = useNavigate();
   const runs = useRuns();
 
   React.useEffect(() => {
@@ -47,7 +49,9 @@ function App() {
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {inProgressRuns.length > 0 ? (
                 inProgressRuns.map((run: Run) => (
-                  <RunCard key={run.id} run={run} />
+                  <div key={run.id} onClick={() => navigate(`/run/${run.id}`)}>
+                    <RunCard run={run} />
+                  </div>
                 ))
               ) : (
                 <NoActiveTestsCard />
@@ -63,7 +67,9 @@ function App() {
                     run.status === "passed" || run.status === "failed",
                 )
                 .map((run: Run) => (
-                  <RunCard key={run.id} run={run} />
+                  <div key={run.id} onClick={() => navigate(`/run/${run.id}`)}>
+                    <RunCard run={run} />
+                  </div>
                 ))}
             </div>
           </div>

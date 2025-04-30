@@ -20,6 +20,7 @@ import (
 func RunTests(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	var tests = []MessageTest{}
 	tests = append(tests, GenerateECUTests()...)
+	tests = append(tests, GenerateACUTests()...)
 
 	wg := sync.WaitGroup{}
 	wg.Add(len(tests))
