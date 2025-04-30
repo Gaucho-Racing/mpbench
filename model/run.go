@@ -10,7 +10,7 @@ type Run struct {
 	Status           string    `json:"status"`
 	GithubCheckRunID int       `json:"github_check_run_id"`
 	RunTests         []RunTest `gorm:"-" json:"run_tests"`
-	CreatedAt        time.Time `gorm:"autoCreateTime" json:"created_at"`
+	CreatedAt        time.Time `gorm:"autoCreateTime;precision:6" json:"created_at"`
 }
 
 func (Run) TableName() string {
@@ -24,7 +24,7 @@ type RunTest struct {
 	Status         string          `json:"status"`
 	Data           string          `json:"data"`
 	RunTestResults []RunTestResult `gorm:"-" json:"run_test_results"`
-	CreatedAt      time.Time       `gorm:"autoCreateTime" json:"created_at"`
+	CreatedAt      time.Time       `gorm:"autoCreateTime;precision:6" json:"created_at"`
 }
 
 func (RunTest) TableName() string {
@@ -38,7 +38,7 @@ type RunTestResult struct {
 	Status     string    `json:"status"`
 	Value      string    `json:"value"`
 	Expected   string    `json:"expected"`
-	CreatedAt  time.Time `gorm:"autoCreateTime" json:"created_at"`
+	CreatedAt  time.Time `gorm:"autoCreateTime;precision:6" json:"created_at"`
 }
 
 func (RunTestResult) TableName() string {
