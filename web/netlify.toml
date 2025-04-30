@@ -1,6 +1,6 @@
 [[redirects]]
   from = "/api/*"
-  to = "https://grapp-api.gauchoracing.com/:splat"
+  to = "https://mpbench-api.gauchoracing.com/:splat"
   status = 200
   force = true
 

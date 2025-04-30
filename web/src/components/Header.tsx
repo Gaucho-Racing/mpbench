@@ -1,14 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
-import { logout } from "@/lib/auth";
-import { useUser } from "@/lib/store";
 
 interface HeaderProps {
   className?: string;
@@ -23,7 +13,10 @@ const Header = (props: HeaderProps) => {
       style={{ ...props.style }}
     >
       <div className="flex flex-row items-center justify-between">
-        <div className="flex flex-row items-center p-4">
+        <div
+          className="flex cursor-pointer flex-row items-center p-4"
+          onClick={() => navigate("/")}
+        >
           <img src="/logo/mpbench.png" width={40} height={40} alt="Logo" />
           <h1 className="ml-4">MPBench</h1>
         </div>

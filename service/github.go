@@ -149,7 +149,7 @@ func CreateCheckRun(commit string, name string) (int, error) {
 			Summary string `json:"summary,omitempty"`
 			Text    string `json:"text,omitempty"`
 		}{
-			Title:   "MPBench Unit Tests",
+			Title:   "New MPBench Test",
 			Summary: "queued",
 			Text:    "",
 		},
@@ -225,6 +225,12 @@ func UpdateCheckRun(checkRunID int, payload model.CheckRunPayload) error {
 
 func UpdateCheckRunInProgress(runID string) {
 	run := GetRunByID(runID)
+	title := fmt.Sprintf("MPBench %s Unit Tests", run.Service)
+	summary := fmt.Sprintf("Run ID: %s\nRunning tests...", run.ID)
+	if strings.Contains(run.Name, "benchmark") {
+		title = fmt.Sprintf("MPBench %s Benchmark", run.Service)
+		summary = fmt.Sprintf("Run ID: %s\nRunning benchmarks...", run.ID)
+	}
 	if run.GithubCheckRunID != 0 {
 		err := UpdateCheckRun(run.GithubCheckRunID, model.CheckRunPayload{
 			Status:     "in_progress",
@@ -235,8 +241,8 @@ func UpdateCheckRunInProgress(runID string) {
 				Summary string `json:"summary,omitempty"`
 				Text    string `json:"text,omitempty"`
 			}{
-				Title:   fmt.Sprintf("MPBench %s Unit Tests", run.Service),
-				Summary: fmt.Sprintf("Run ID: %s\nRunning tests...", run.ID),
+				Title:   title,
+				Summary: summary,
 				Text:    "",
 			},
 		})
@@ -248,6 +254,14 @@ func UpdateCheckRunInProgress(runID string) {
 
 func GenerateCheckRunConclusion(runID string) {
 	run := GetRunByID(runID)
+	if strings.Contains(run.Name, "unit") {
+		CheckRunUnitTestConclusion(run)
+	} else if strings.Contains(run.Name, "benchmark") {
+		CheckRunBenchmarkConclusion(run)
+	}
+}
+
+func CheckRunUnitTestConclusion(run model.Run) {
 	passed := make([]model.RunTest, 0)
 	partial := make([]model.RunTest, 0)
 	failed := make([]model.RunTest, 0)
@@ -358,6 +372,26 @@ func GenerateCheckRunConclusion(runID string) {
 		}
 		UpdateCheckRun(run.GithubCheckRunID, payload)
 	}
+}
+
+func CheckRunBenchmarkConclusion(run model.Run) {
+	textBuffer := bytes.NewBufferString("")
+	textBuffer.WriteString("# Summary\n\n")
+	payload := model.CheckRunPayload{
+		Name:       run.Name,
+		Status:     "completed",
+		Conclusion: "failure",
+		Output: struct {
+			Title   string `json:"title,omitempty"`
+			Summary string `json:"summary,omitempty"`
+			Text    string `json:"text,omitempty"`
+		}{
+			Title:   fmt.Sprintf("MPBench %s Unit Tests", run.Service),
+			Summary: fmt.Sprintf("Run ID: %s\n\n**Note:** Benchmarking is currently unimplemented, this check run will always fail.", run.ID),
+			Text:    textBuffer.String(),
+		},
+	}
+	UpdateCheckRun(run.GithubCheckRunID, payload)
 }
 
 func RunTestsToResultString(run_test []model.RunTest) string {

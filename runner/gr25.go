@@ -4,6 +4,7 @@ import (
 	"mpbench/model"
 	"mpbench/service"
 	"mpbench/utils"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -33,6 +34,8 @@ func CreateGR25Runs(commit string) ([]model.Run, error) {
 			runs = append(runs, run)
 		}
 	}
+
+	time.Sleep(200 * time.Millisecond)
 
 	// Create gr25 benchmark run
 	id, err = service.CreateCheckRun(commit, "gr25 / benchmark")

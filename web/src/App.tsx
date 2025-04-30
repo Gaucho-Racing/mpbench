@@ -1,25 +1,18 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { checkCredentials } from "@/lib/auth";
 import Footer from "@/components/Footer";
 import { AuthLoading } from "@/components/AuthLoading";
-import { useUser, useRuns, setRuns } from "@/lib/store";
+import { useRuns, setRuns } from "@/lib/store";
 import Header from "./components/Header";
 import { BACKEND_URL } from "@/consts/config";
 import axios from "axios";
 import { notify } from "@/lib/notify";
 import { getAxiosErrorMessage } from "@/lib/axios-error-handler";
 import { Run } from "@/models/run";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { RunCard } from "@/components/RunCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock } from "lucide-react";
 import { NoActiveTestsCard } from "@/components/NoActiveTestsCard";
 
 function App() {
-  const navigate = useNavigate();
   const runs = useRuns();
-  const currentUser = useUser();
 
   React.useEffect(() => {
     getRuns();

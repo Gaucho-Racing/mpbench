@@ -1,8 +1,6 @@
 import { Run } from "@/models/run";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
 
 interface RunCardProps {
   run: Run;
@@ -52,12 +50,10 @@ export function RunCard({ run }: RunCardProps) {
   const progress = totalTests > 0 ? (completedTests / totalTests) * 100 : 0;
 
   return (
-    <Card className="h-full transition-shadow duration-200 hover:shadow-lg">
+    <Card className="h-full transition-all duration-200 hover:bg-neutral-900">
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
-          <CardTitle className="text-lg">
-            {run.service} / {run.name}
-          </CardTitle>
+          <CardTitle className="text-lg">{run.name}</CardTitle>
           <Card
             className={`ml-2 rounded-md border-none px-2 py-1 text-xs font-medium ${getStatusBadgeClass(run.status)}`}
           >
@@ -67,7 +63,7 @@ export function RunCard({ run }: RunCardProps) {
       </CardHeader>
       <CardContent>
         <p className="text-md mb-2 text-muted-foreground">
-          Commit: {run.commit.substring(0, 7)}
+          Commit: <code>{run.commit.substring(0, 7)}</code>
         </p>
         {run.status.toLowerCase() === "passed" ||
         run.status.toLowerCase() === "failed" ? (
@@ -75,8 +71,16 @@ export function RunCard({ run }: RunCardProps) {
             <span>Tests: {run.run_tests.length}</span>
             <span className="mx-2">•</span>
             <span>
-              Created:{" "}
-              {new Date(run.created_at).toLocaleString("en-US", {
+              Finished:{" "}
+              {new Date(
+                run.run_tests.length > 0
+                  ? Math.max(
+                      ...run.run_tests.map((test) =>
+                        new Date(test.created_at).getTime(),
+                      ),
+                    )
+                  : new Date(run.created_at).getTime(),
+              ).toLocaleString("en-US", {
                 month: "numeric",
                 day: "numeric",
                 year: "numeric",
