@@ -347,7 +347,7 @@ function RunDetailsPage() {
                     )
                     .map((result) => (
                       <div key={result.id} className="mb-4">
-                        <RunTestCard test={result} defaultExpanded={true} />
+                        <RunTestCard test={result} />
                       </div>
                     ))}
                 </div>
