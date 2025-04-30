@@ -48,7 +48,7 @@ export default function Footer() {
       <div className="my-4 h-0.5 w-full bg-gradient-to-r from-gr-pink to-gr-purple"></div>
       <div className="flex w-full items-center justify-between">
         <p className="text-md ml-4 mr-4 text-gray-400">
-          © 2020 - {new Date().getFullYear()} Gaucho Racing
+          © 2024 - {new Date().getFullYear()} Gaucho Racing
         </p>
         <div className="flex">
           <button onClick={() => window.open(SOCIAL_LINKS.github, "_blank")}>

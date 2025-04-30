@@ -4,12 +4,10 @@ import (
 	"mpbench/config"
 	"mpbench/model"
 	"mpbench/runner"
-	"mpbench/service"
 	"mpbench/utils"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 func GithubEventHandler(c *gin.Context) {
@@ -30,23 +28,7 @@ func GithubEventHandler(c *gin.Context) {
 		}
 
 		go func() {
-			id, err := service.CreateCheckRun(checkSuiteEvent.CheckSuite.HeadSha)
-			if err != nil {
-				utils.SugarLogger.Errorf("Error creating check run: %v", err)
-				return
-			}
-			utils.SugarLogger.Infof("Check run created with ID: %d", id)
-
-			run := model.Run{
-				ID:               uuid.New().String(),
-				Commit:           checkSuiteEvent.CheckSuite.HeadSha,
-				Status:           "queued",
-				Name:             "mpbench / unit",
-				Service:          "gr25",
-				GithubCheckRunID: id,
-			}
-			service.CreateRun(run)
-			runner.Queue.Add(run)
+			runner.CreateGR25Runs(checkSuiteEvent.CheckSuite.HeadSha)
 		}()
 
 	} else if ghEventType == "check_run" {
@@ -65,23 +47,7 @@ func GithubEventHandler(c *gin.Context) {
 		}
 
 		go func() {
-			id, err := service.CreateCheckRun(checkRunEvent.CheckRun.HeadSha)
-			if err != nil {
-				utils.SugarLogger.Errorf("Error creating check run: %v", err)
-				return
-			}
-			utils.SugarLogger.Infof("Check run created with ID: %d", id)
-
-			run := model.Run{
-				ID:               uuid.New().String(),
-				Commit:           checkRunEvent.CheckRun.HeadSha,
-				Status:           "queued",
-				Name:             "mpbench / unit",
-				Service:          "gr25",
-				GithubCheckRunID: id,
-			}
-			service.CreateRun(run)
-			runner.Queue.Add(run)
+			runner.CreateGR25Runs(checkRunEvent.CheckRun.HeadSha)
 		}()
 	}
 

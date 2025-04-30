@@ -123,7 +123,7 @@ func GetGithubAppInstallationToken() (string, error) {
 	return result.Token, nil
 }
 
-func CreateCheckRun(commit string) (int, error) {
+func CreateCheckRun(commit string, name string) (int, error) {
 	token, err := GetGithubAppInstallationToken()
 	if err != nil {
 		return 0, fmt.Errorf("failed to get installation token: %w", err)
@@ -140,7 +140,7 @@ func CreateCheckRun(commit string) (int, error) {
 	req.Header.Set("Content-Type", "application/json")
 
 	payload := model.CheckRunPayload{
-		Name:       "mpbench / unit",
+		Name:       name,
 		HeadSHA:    commit,
 		Status:     "queued",
 		ExternalID: "1",

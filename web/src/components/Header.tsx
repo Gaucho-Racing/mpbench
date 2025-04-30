@@ -17,7 +17,6 @@ interface HeaderProps {
 
 const Header = (props: HeaderProps) => {
   const navigate = useNavigate();
-  const currentUser = useUser();
   return (
     <div
       className={`w-full items-center justify-start border-b border-neutral-800 transition-all duration-200 lg:pl-32 lg:pr-32 ${props.className}`}
@@ -25,51 +24,8 @@ const Header = (props: HeaderProps) => {
     >
       <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row items-center p-4">
-          <h1>Jiffy</h1>
-        </div>
-        <div className="mr-4 flex flex-row p-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Avatar className="cursor-pointer">
-                <AvatarImage src={currentUser.avatar_url} />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="mt-2 w-56" align="end">
-              <DropdownMenuItem>
-                <div className="flex flex-col">
-                  <p>
-                    {currentUser.first_name} {currentUser.last_name}
-                  </p>
-                  <p className="text-gray-400">{currentUser.email}</p>
-                </div>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() =>
-                  window.open(
-                    "https://sso.gauchoracing.com/users/348220961155448833/edit",
-                    "_blank",
-                  )
-                }
-              >
-                <div className="flex">Profile</div>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <div className="flex">Settings</div>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => {
-                  logout();
-                  navigate("/auth/login");
-                }}
-              >
-                <div className="flex flex-col text-red-500">Sign Out</div>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <img src="/logo/mpbench.png" width={40} height={40} alt="Logo" />
+          <h1 className="ml-4">MPBench</h1>
         </div>
       </div>
     </div>
