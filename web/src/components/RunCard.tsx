@@ -15,7 +15,7 @@ const getStatusBadgeClass = (status: string) => {
     case "in_progress":
       return "bg-gradient-to-br from-gr-pink to-gr-purple text-white";
     case "building":
-      return "bg-slate-500 text-white";
+      return "bg-blue-500 text-white";
     case "initializing":
       return "bg-yellow-500 text-white";
     default:
