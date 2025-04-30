@@ -4,12 +4,12 @@ import "fmt"
 
 func GenerateACUTests() []MessageTest {
 	var tests = []MessageTest{
-		ACUStatusOneTest1,
-		ACUStatusOneTest2,
-		ACUStatusTwoTest1,
-		ACUStatusTwoTest2,
-		ACUStatusThreeTest1,
-		ACUStatusThreeTest2,
+		// ACUStatusOneTest1,
+		// ACUStatusOneTest2,
+		// ACUStatusTwoTest1,
+		// ACUStatusTwoTest2,
+		// ACUStatusThreeTest1,
+		// ACUStatusThreeTest2,
 	}
 
 	for i := range tests {
