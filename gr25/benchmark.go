@@ -236,6 +236,9 @@ func GenerateBenchmarkResults(run model.Run, db *gorm.DB) map[string]float64 {
 	p95 := latencies[int(float64(n)*0.95)]
 	p99 := latencies[int(float64(n)*0.99)]
 
+	// Delete all signals after collecting metrics
+	db.Where("vehicle_id = ?", VehicleID).Delete(&mapache.Signal{})
+
 	return map[string]float64{
 		"min": min,
 		"max": max,
