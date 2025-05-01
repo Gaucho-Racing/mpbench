@@ -17,6 +17,19 @@ import (
 	"gorm.io/gorm"
 )
 
+type MessageTest struct {
+	// ID is the CAN ID of the message
+	ID int
+	// Node is the node that the message is sent from
+	Node string
+	// Name is a public-facing name for the test
+	Name string
+	// Data is the data contained in the message
+	Data []byte
+	// ExpectedValues is a map of the expected signal ids and their final values
+	ExpectedValues map[string]interface{}
+}
+
 func RunTests(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	var tests = []MessageTest{}
 	tests = append(tests, GenerateECUTests()...)
@@ -35,22 +48,6 @@ func RunTests(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 		}(test)
 	}
 	wg.Wait()
-}
-
-const VehicleID = "gr25-test"
-const UploadKey = 10310
-
-type MessageTest struct {
-	// ID is the CAN ID of the message
-	ID int
-	// Node is the node that the message is sent from
-	Node string
-	// Name is a public-facing name for the test
-	Name string
-	// Data is the data contained in the message
-	Data []byte
-	// ExpectedValues is a map of the expected signal ids and their final values
-	ExpectedValues map[string]interface{}
 }
 
 func (m MessageTest) Run(run model.Run, mqttClient *mq.Client, db *gorm.DB) bool {

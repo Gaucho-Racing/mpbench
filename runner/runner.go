@@ -29,7 +29,7 @@ func RunTestSuite(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 
 func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	if run.Service == "gr25" {
-		// StartGR25Tests(run, mqttClient, db)
+		gr25.RunBenchmark(run, mqttClient, db)
 	}
 }
 
