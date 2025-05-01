@@ -57,7 +57,7 @@ func PublishMessageFuzz(mqttClient *mq.Client, m MessageTest) {
 }
 
 func WaitForBenchmark(numSignals int, db *gorm.DB) {
-	timeout := time.After(20 * time.Second)
+	timeout := time.After(60 * time.Second)
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
 
