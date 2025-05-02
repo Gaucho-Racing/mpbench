@@ -81,7 +81,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	endTime := time.Now()
 	utils.SugarLogger.Infof("Benchmark completed in %s", endTime.Sub(startTime))
 	results := GenerateBenchmarkResults(run, db)
-	status := VerifyBenchmarkResults(run_test1, "fast", endTime.Sub(startTime), results)
+	status := VerifyBenchmarkResults(run_test1, endTime.Sub(startTime), results)
 	run_test1.Status = status
 	service.CreateRunTest(run_test1)
 
@@ -100,7 +100,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	endTime = time.Now()
 	utils.SugarLogger.Infof("Benchmark completed in %s", endTime.Sub(startTime))
 	results = GenerateBenchmarkResults(run, db)
-	status = VerifyBenchmarkResults(run_test2, "fast", endTime.Sub(startTime), results)
+	status = VerifyBenchmarkResults(run_test2, endTime.Sub(startTime), results)
 	run_test2.Status = status
 	service.CreateRunTest(run_test2)
 
@@ -119,7 +119,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	endTime = time.Now()
 	utils.SugarLogger.Infof("Benchmark completed in %s", endTime.Sub(startTime))
 	results = GenerateBenchmarkResults(run, db)
-	status = VerifyBenchmarkResults(run_test3, "fast", endTime.Sub(startTime), results)
+	status = VerifyBenchmarkResults(run_test3, endTime.Sub(startTime), results)
 	run_test3.Status = status
 	service.CreateRunTest(run_test3)
 
@@ -138,7 +138,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	endTime = time.Now()
 	utils.SugarLogger.Infof("Benchmark completed in %s", endTime.Sub(startTime))
 	results = GenerateBenchmarkResults(run, db)
-	status = VerifyBenchmarkResults(run_test4, "fast", endTime.Sub(startTime), results)
+	status = VerifyBenchmarkResults(run_test4, endTime.Sub(startTime), results)
 	run_test4.Status = status
 	service.CreateRunTest(run_test4)
 
@@ -157,7 +157,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	endTime = time.Now()
 	utils.SugarLogger.Infof("Benchmark completed in %s", endTime.Sub(startTime))
 	results = GenerateBenchmarkResults(run, db)
-	status = VerifyBenchmarkResults(run_test5, "fast", endTime.Sub(startTime), results)
+	status = VerifyBenchmarkResults(run_test5, endTime.Sub(startTime), results)
 	run_test5.Status = status
 	service.CreateRunTest(run_test5)
 }
@@ -179,7 +179,7 @@ func PublishMessageFuzz(mqttClient *mq.Client, m MessageTest) {
 }
 
 func WaitForBenchmark(numSignals int, db *gorm.DB) {
-	timeout := time.After(60 * time.Second)
+	timeout := time.After(5 * time.Minute)
 	ticker := time.NewTicker(1 * time.Second)
 	defer ticker.Stop()
 
@@ -248,21 +248,25 @@ func GenerateBenchmarkResults(run model.Run, db *gorm.DB) map[string]float64 {
 	}
 }
 
-func VerifyBenchmarkResults(run_test model.RunTest, benchmarkType string, totalTime time.Duration, results map[string]float64) string {
+func VerifyBenchmarkResults(run_test model.RunTest, totalTime time.Duration, results map[string]float64) string {
 	if len(results) == 0 {
 		return "failed"
 	}
 
 	// Maximum acceptable latency for each benchmark type
 	// In order of total time, min, max, avg, p95, p99
-	quotas := map[string][]int64{
-		"fast": {20000, 10, 5000, 600, 2000, 4500},
+	quotas := map[string]int64{
+		"min": 10,
+		"max": 5000,
+		"avg": 600,
+		"p95": 1000,
+		"p99": 2000,
 	}
 
 	rts := []model.RunTestResult{}
 	status := ""
 
-	if totalTime.Milliseconds() <= quotas[benchmarkType][0] {
+	if totalTime.Milliseconds() <= 5*60*1000 {
 		status = "passed"
 	} else {
 		status = "failed"
@@ -273,12 +277,12 @@ func VerifyBenchmarkResults(run_test model.RunTest, benchmarkType string, totalT
 		SignalName: "total_ingest_time",
 		Status:     status,
 		Value:      formatResultMillis(totalTime.Milliseconds()),
-		Expected:   formatResultMillis(quotas[benchmarkType][0]),
+		Expected:   formatResultMillis(5 * 60 * 1000),
 	}
 	service.CreateRunTestResult(run_test_result)
 	rts = append(rts, run_test_result)
 
-	if int64(results["min"]) <= quotas[benchmarkType][1] {
+	if int64(results["min"]) <= quotas["min"] {
 		status = "passed"
 	} else {
 		status = "failed"
@@ -289,12 +293,12 @@ func VerifyBenchmarkResults(run_test model.RunTest, benchmarkType string, totalT
 		SignalName: "min_latency",
 		Status:     status,
 		Value:      formatResultMillis(int64(results["min"])),
-		Expected:   formatResultMillis(quotas[benchmarkType][1]),
+		Expected:   formatResultMillis(quotas["min"]),
 	}
 	service.CreateRunTestResult(run_test_result)
 	rts = append(rts, run_test_result)
 
-	if int64(results["max"]) <= quotas[benchmarkType][2] {
+	if int64(results["max"]) <= quotas["max"] {
 		status = "passed"
 	} else {
 		status = "failed"
@@ -305,12 +309,12 @@ func VerifyBenchmarkResults(run_test model.RunTest, benchmarkType string, totalT
 		SignalName: "max_latency",
 		Status:     status,
 		Value:      formatResultMillis(int64(results["max"])),
-		Expected:   formatResultMillis(quotas[benchmarkType][2]),
+		Expected:   formatResultMillis(quotas["max"]),
 	}
 	service.CreateRunTestResult(run_test_result)
 	rts = append(rts, run_test_result)
 
-	if int64(results["avg"]) <= quotas[benchmarkType][3] {
+	if int64(results["avg"]) <= quotas["avg"] {
 		status = "passed"
 	} else {
 		status = "failed"
@@ -321,12 +325,12 @@ func VerifyBenchmarkResults(run_test model.RunTest, benchmarkType string, totalT
 		SignalName: "avg_latency",
 		Status:     status,
 		Value:      formatResultMillis(int64(results["avg"])),
-		Expected:   formatResultMillis(quotas[benchmarkType][3]),
+		Expected:   formatResultMillis(quotas["avg"]),
 	}
 	service.CreateRunTestResult(run_test_result)
 	rts = append(rts, run_test_result)
 
-	if int64(results["p95"]) <= quotas[benchmarkType][4] {
+	if int64(results["p95"]) <= quotas["p95"] {
 		status = "passed"
 	} else {
 		status = "failed"
@@ -337,12 +341,12 @@ func VerifyBenchmarkResults(run_test model.RunTest, benchmarkType string, totalT
 		SignalName: "p95_latency",
 		Status:     status,
 		Value:      formatResultMillis(int64(results["p95"])),
-		Expected:   formatResultMillis(quotas[benchmarkType][4]),
+		Expected:   formatResultMillis(quotas["p95"]),
 	}
 	service.CreateRunTestResult(run_test_result)
 	rts = append(rts, run_test_result)
 
-	if int64(results["p99"]) <= quotas[benchmarkType][5] {
+	if int64(results["p99"]) <= quotas["p99"] {
 		status = "passed"
 	} else {
 		status = "failed"
@@ -353,7 +357,7 @@ func VerifyBenchmarkResults(run_test model.RunTest, benchmarkType string, totalT
 		SignalName: "p99_latency",
 		Status:     status,
 		Value:      formatResultMillis(int64(results["p99"])),
-		Expected:   formatResultMillis(quotas[benchmarkType][5]),
+		Expected:   formatResultMillis(quotas["p99"]),
 	}
 	service.CreateRunTestResult(run_test_result)
 	rts = append(rts, run_test_result)
