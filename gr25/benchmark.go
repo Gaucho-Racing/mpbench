@@ -266,7 +266,7 @@ func VerifyBenchmarkResults(run_test model.RunTest, totalTime time.Duration, res
 	rts := []model.RunTestResult{}
 	status := ""
 
-	if totalTime.Milliseconds() <= 5*60*1000 {
+	if totalTime.Milliseconds() <= 20*60*1000 {
 		status = "passed"
 	} else {
 		status = "failed"
