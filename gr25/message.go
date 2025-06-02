@@ -1006,6 +1006,32 @@ var ACUCellDataFiveTest2 = MessageTest{
 	},
 }
 
+var DCDCStatusTest1 = MessageTest{
+	ID:   0x012,
+	Name: "DC-DC Status Test 1",
+	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"input_voltage":  0,
+		"output_voltage": 0,
+		"input_current":  0,
+		"output_current": 0,
+		"DC-DC_temp":     0,
+	},
+}
+
+var DCDCStatusTest2 = MessageTest{
+	ID:   0x012,
+	Name: "DC-DC Status Test 2",
+	Data: []byte{0xff, 0x71, 0x52, 0x2b, 0x63, 0xbb, 0xd6},
+	ExpectedValues: map[string]interface{}{
+		"input_voltage":  29.183,
+		"output_voltage": 11.09,
+		"input_current":  9.9,
+		"output_current": 18.7,
+		"DC-DC_temp":     214,
+	},
+}
+
 var TCMResourceTest1 = MessageTest{
 	ID:   0x02A,
 	Name: "TCM Resource Utilization Test 1",
