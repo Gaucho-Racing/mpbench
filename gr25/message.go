@@ -1486,18 +1486,18 @@ var SAMSusPotsTest2 = MessageTest{
 	},
 }
 
-var SAMTDFTest1 = MessageTest{
+var SAMTOFTest1 = MessageTest{
 	ID:   0x026,
-	Name: "SAM TDF Test 1",
+	Name: "SAM TOF Test 1",
 	Data: []byte{0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
 		"height": 0,
 	},
 }
 
-var SAMTDFTest2 = MessageTest{
+var SAMTOFTest2 = MessageTest{
 	ID:   0x026,
-	Name: "SAM TDF Test 2",
+	Name: "SAM TOF Test 2",
 	Data: []byte{0x00, 0x82},
 	ExpectedValues: map[string]interface{}{
 		"height": 130,
@@ -1539,10 +1539,29 @@ var SAMPushrodForceTest2 = MessageTest{
 	},
 }
 
+var SpecificBrakeIRTest1 = MessageTest{
+	ID:   0x02C,
+	Name: "Specific Brake IR Test 1",
+	Data: []byte{0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"wheel_identifier": 0,
+		"temp":             0,
+	},
+}
+
+var SpecificBrakeIRTest2 = MessageTest{
+	ID:   0x02C,
+	Name: "Specific Brake IR Test 2",
+	Data: []byte{0x01, 0x12},
+	ExpectedValues: map[string]interface{}{
+		"wheel_identifier": 1,
+		"temp":             18,
+	},
+}
+
 // bottom ones skipped
 // tcm status
 // dash warning flags
-// specific brake ir
 // ecu ping information
 
 // need to add ecu pedals data, spreadsheet data names are weird
