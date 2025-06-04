@@ -1032,6 +1032,504 @@ var DCDCStatusTest2 = MessageTest{
 	},
 }
 
+var InverterStatusOneTest1 = MessageTest{
+	ID:   0x013,
+	Name: "Inverter Status One Test 1",
+	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"AC_current": -327.68,
+		"DC_current": 0,
+		"motor_RPM":  -32768,
+	},
+}
+
+var InverterStatusOneTest2 = MessageTest{
+	ID:   0x013,
+	Name: "Inverter Status One Test 2",
+	Data: []byte{0x19, 0x33, 0xec, 0x87, 0x0d, 0xb1}, // add
+	ExpectedValues: map[string]interface{}{
+		"AC_current": 7.93,
+		"DC_current": 347.96,
+		"motor_RPM":  12557,
+	},
+}
+
+// ? can sheet length/unit is wrong
+var InverterStatusTwoTest1 = MessageTest{
+	ID:   0x014,
+	Name: "Inverter Status Two Test 1",
+	Data: []byte{0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"U_MOSFET_temperature": -40,
+		"V_MOSFET_temperature": -40,
+		"W_MOSFET_temperature": -40,
+	},
+}
+
+var InverterStatusTwoTest2 = MessageTest{
+	ID:   0x014,
+	Name: "Inverter Status Two Test 2",
+	Data: []byte{0x73, 0x75, 0x04},
+	ExpectedValues: map[string]interface{}{
+		"U_MOSFET_temperature": 33,
+		"V_MOSFET_temperature": 35,
+		"W_MOSFET_temperature": -36,
+	},
+}
+
+var InverterStatusThreeTest1 = MessageTest{
+	ID:   0x015,
+	Name: "Inverter Status Three Test 1",
+	Data: []byte{0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"motor_temperature":    -40,
+		"over_voltage_faults":  0,
+		"under_voltage_fault":  0,
+		"inv._overtemp_fault":  0,
+		"motor_overtemp_fault": 0,
+		"transistor_fault":     0,
+		"encoder_fault":        0,
+		"CAN_fault":            0,
+		"future_use":           0,
+	},
+}
+
+var InverterStatusThreeTest2 = MessageTest{
+	ID:   0x015,
+	Name: "Inverter Status Three Test 2",
+	Data: []byte{0xf2, 0x2f},
+	ExpectedValues: map[string]interface{}{
+		"motor_temperature":    202,
+		"over_voltage_faults":  0,
+		"under_voltage_fault":  0,
+		"inv._overtemp_fault":  1,
+		"motor_overtemp_fault": 0,
+		"transistor_fault":     1,
+		"encoder_fault":        1,
+		"CAN_fault":            1,
+		"future_use":           1,
+	},
+}
+
+var InverterConfigTest1 = MessageTest{
+	ID:   0x016,
+	Name: "Inverter Config Test 1",
+	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"max_AC_current":         -327.68,
+		"max_DC_current":         -327.68,
+		"absolute_max_RPM_limit": -32768,
+		"motor_direction":        0,
+	},
+}
+
+var InverterConfigTest2 = MessageTest{
+	ID:   0x016,
+	Name: "Inverter Config Test 2",
+	Data: []byte{0xfa, 0xa8, 0x54, 0xd3, 0x9f, 0xed, 0x01},
+	ExpectedValues: map[string]interface{}{
+		"max_AC_current":         104.9,
+		"max_DC_current":         213.32,
+		"absolute_max_RPM_limit": 38063,
+		"motor_direction":        1,
+	},
+}
+
+var InverterCommandTest1 = MessageTest{
+	ID:   0x017,
+	Name: "Inverter Command Test 1",
+	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"set_AC_current":  -327.68,
+		"set_DC_current":  -327.68,
+		"RPM_limit":       -32768,
+		"field_weakening": 0,
+		"drive_enable":    0,
+	},
+}
+
+var InverterCommandTest2 = MessageTest{
+	ID:   0x017,
+	Name: "Inverter Command Test 2",
+	Data: []byte{0x66, 0x70, 0x0b, 0x3c, 0x0f, 0x4a, 0xed, 0x01},
+	ExpectedValues: map[string]interface{}{
+		"set_AC_current":  -39.94,
+		"set_DC_current":  -173.97,
+		"RPM_limit":       -13809,
+		"field_weakening": 23.7,
+		"drive_enable":    1,
+	},
+}
+
+var FanStatusTest1 = MessageTest{
+	ID:   0x018,
+	Name: "Fan Status Test 1",
+	Data: []byte{0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"fan_speed":     0,
+		"input_voltage": 0,
+		"input_current": 0,
+	},
+}
+
+var FanStatusTest2 = MessageTest{
+	ID:   0x018,
+	Name: "Fan Status Test 2",
+	Data: []byte{0xdf, 0x41, 0x9d, 0x1d},
+	ExpectedValues: map[string]interface{}{
+		"fan_speed":     16863,
+		"input_voltage": 15.7,
+		"input_current": 2.9,
+	},
+}
+var FanCommandTest1 = MessageTest{
+	ID:   0x019,
+	Name: "Fan Command Test 1",
+	Data: []byte{0x00},
+	ExpectedValues: map[string]interface{}{
+		"fan_command": 0,
+	},
+}
+
+var FanCommandTest2 = MessageTest{
+	ID:   0x019,
+	Name: "Fan Command Test 2",
+	Data: []byte{0xd3},
+	ExpectedValues: map[string]interface{}{
+		"fan_command": 211,
+	},
+}
+
+var DashStatusTest1 = MessageTest{
+	ID:   0x01A,
+	Name: "Dash Status Test 1",
+	Data: []byte{0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"BMS_LED":         0,
+		"IMD_LED":         0,
+		"BSPD_LED":        0,
+		"TS_button_data":  0,
+		"RTD_button_data": 0,
+	},
+}
+
+var DashStatusTest2 = MessageTest{
+	ID:   0x01A,
+	Name: "Dash Status Test 2",
+	Data: []byte{0x05, 0x1e, 0xF4},
+	ExpectedValues: map[string]interface{}{
+		"BMS_LED":         1,
+		"IMD_LED":         0,
+		"BSPD_LED":        1,
+		"TS_button_data":  3,
+		"RTD_button_data": 1.2, // check, 2s complement -12
+	},
+}
+
+var DashConfigTest1 = MessageTest{
+	ID:   0x01B,
+	Name: "Dash Config Test 1",
+	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"BMS_LED":        0,
+		"IMD_LED":        0,
+		"BSPD_LED":       0,
+		"button_LED_1_R": 0,
+		"button_LED_1_G": 0,
+		"button_LED_1_B": 0,
+		"button_LED_2_R": 0,
+		"button_LED_2_G": 0,
+		"button_LED_2_B": 0,
+	},
+}
+
+var DashConfigTest2 = MessageTest{
+	ID:   0x01B,
+	Name: "Dash Config Test 2",
+	Data: []byte{0x07, 0xd4, 0x8d, 0xde, 0x22, 0x20, 0xc5},
+	ExpectedValues: map[string]interface{}{
+		"BMS_LED":        1,
+		"IMD_LED":        1,
+		"BSPD_LED":       1,
+		"button_LED_1_R": 212,
+		"button_LED_1_G": 141,
+		"button_LED_1_B": 222,
+		"button_LED_2_R": 34,
+		"button_LED_2_G": 32,
+		"button_LED_2_B": 197,
+	},
+}
+
+// // check
+// var SteeringStatusTest1 = MessageTest{
+// 	ID:   0x01C,
+// 	Name: "Steering Status Test 1",
+// 	Data: []byte{0x00, 0x00},
+// 	ExpectedValues: map[string]interface{}{
+// 		"current_encoder":    0, // ??? Spreadsheet scaling is inconsistent with min/max
+// 		"torque_map_encoder": 0, // ??? Spreadsheet scaling is inconsistent with min/max
+// 		"regen":              0, // ??? Spreadsheet scaling is inconsistent with min/max
+// 		"button_1":           0,
+// 		"button_2":           0,
+// 		"button_3":           0,
+// 		"button_4":           0,
+// 	},
+// }
+
+// // check and fill
+// var SteeringStatusTest2 = MessageTest{
+// 	ID:   0x01C,
+// 	Name: "Steering Status Test 2",
+// 	Data: []byte{0x00, 0x00}, // need to fill
+// 	ExpectedValues: map[string]interface{}{
+// 		"current_encoder":    0, // ??? Spreadsheet scaling is inconsistent with min/max
+// 		"torque_map_encoder": 0, // ??? Spreadsheet scaling is inconsistent with min/max
+// 		"regen":              0, // ??? Spreadsheet scaling is inconsistent with min/max
+// 		"button_1":           0,
+// 		"button_2":           0,
+// 		"button_3":           0,
+// 		"button_4":           0,
+// 	},
+// }
+
+// // reserved
+// var SteeringConfigTest1 = MessageTest{
+// 	ID:   0x01D,
+// 	Name: "Steering Config Test 1",
+// 	Data: []byte{0x00},
+// 	ExpectedValues: map[string]interface{}{
+// 		"reserved": 0, // ??? what
+// 	},
+// }
+
+// var SteeringConfigTest2 = MessageTest{
+// 	ID:   0x01D,
+// 	Name: "Steering Config Test 2",
+// 	Data: []byte{0x00},
+// 	ExpectedValues: map[string]interface{}{
+// 		"reserved": 0, // ??? what
+// 	},
+// }
+
+var SAMBrakeIRTest1 = MessageTest{
+	ID:   0x01E,
+	Name: "SAM Break IR Test 1",
+	Data: []byte{0x00},
+	ExpectedValues: map[string]interface{}{
+		"temp": 0,
+	},
+}
+
+var SAMBrakeIRTest2 = MessageTest{
+	ID:   0x01E,
+	Name: "SAM Break IR Test 2",
+	Data: []byte{0x89},
+	ExpectedValues: map[string]interface{}{
+		"temp": 137,
+	},
+}
+
+var SAMTireTempTest1 = MessageTest{
+	ID:   0x01F,
+	Name: "SAM Tire Temp Test 1",
+	Data: []byte{0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"outside_temp":        0,
+		"outside_middle_temp": 0,
+		"inside_middle_temp":  0,
+		"inside_temp":         0,
+	},
+}
+
+var SAMTireTempTest2 = MessageTest{
+	ID:   0x01F,
+	Name: "SAM Tire Temp Test 2",
+	Data: []byte{0xfa, 0xb1, 0xda, 0x0a},
+	ExpectedValues: map[string]interface{}{
+		"outside_temp":        250,
+		"outside_middle_temp": 177,
+		"inside_middle_temp":  218,
+		"inside_temp":         10,
+	},
+}
+
+var SAMIMUTest1 = MessageTest{
+	ID:   0x020,
+	Name: "SAM IMU Test 1",
+	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"acceleration_in_X-axis":     -327.68,
+		"acceleration_in_Y-axis":     -327.68,
+		"acceleration_in_Z-axis":     -327.68,
+		"angular_velocity_in_X-axis": -32.768,
+		"angular_velocity_in_Y-axis": -32.768,
+		"angular_velocity_in_Z-axis": -32.768,
+	},
+}
+var SAMIMUTest2 = MessageTest{
+	ID:   0x020,
+	Name: "SAM IMU Test 2",
+	Data: []byte{0x7d, 0xc2, 0xb7, 0x61, 0xaf, 0x20, 0x2e, 0x72, 0x5d, 0xac, 0xaf, 0xa1},
+	ExpectedValues: map[string]interface{}{
+		"acceleration_in_X-axis":     -170.21,
+		"acceleration_in_Y-axis":     -77.53,
+		"acceleration_in_Z-axis":     -244.01,
+		"angular_velocity_in_X-axis": -3.538,
+		"angular_velocity_in_Y-axis": 11.357,
+		"angular_velocity_in_Z-axis": 8.623,
+	},
+}
+
+// var SAMGPSOneTest1 = MessageTest{
+// 	ID:             0x021,
+// 	Name:           "SAM GPS 1 Test 1",
+// 	Data:           []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+// 	ExpectedValues: map[string]interface{}{
+// 		// what
+// 	},
+// }
+
+// var SAMGPSOneTest2 = MessageTest{
+// 	ID:             0x021,
+// 	Name:           "SAM GPS 1 Test 2",
+// 	Data:           []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // change
+// 	ExpectedValues: map[string]interface{}{
+// 		// what
+// 	},
+// }
+
+// var SAMGPSTwoTest1 = MessageTest{
+// 	ID:             0x022,
+// 	Name:           "SAM GPS 2 Test 1",
+// 	Data:           []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+// 	ExpectedValues: map[string]interface{}{
+// 		// what
+// 	},
+// }
+
+// var SAMGPSTwoTest2 = MessageTest{
+// 	ID:             0x022,
+// 	Name:           "SAM GPS 2 Test 2",
+// 	Data:           []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // change
+// 	ExpectedValues: map[string]interface{}{
+// 		// what
+// 	},
+// }
+// var SAMGPSTimeTest1 = MessageTest{
+// 	ID:             0x023,
+// 	Name:           "SAM GPS Time Test 1",
+// 	Data:           []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+// 	ExpectedValues: map[string]interface{}{
+// 		// what
+// 	},
+// }
+
+// var SAMGPSTimeTest2 = MessageTest{
+// 	ID:             0x023,
+// 	Name:           "SAM GPS Time Test 2",
+// 	Data:           []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+// 	ExpectedValues: map[string]interface{}{
+// 		// what
+// 	},
+// }
+
+// var SAMGPSHeadingTest1 = MessageTest{
+// 	ID:             0x024,
+// 	Name:           "SAM GPS Heading Test 1",
+// 	Data:           []byte{0x00, 0x00, 0x00, 0x00},
+// 	ExpectedValues: map[string]interface{}{
+// 		// what
+// 	},
+// }
+
+// var SAMGPSHeadingTest2 = MessageTest{
+// 	ID:             0x024,
+// 	Name:           "SAM GPS Heading Test 2",
+// 	Data:           []byte{0x00, 0x00, 0x00, 0x00},
+// 	ExpectedValues: map[string]interface{}{
+// 		// what
+// 	},
+// }
+
+var SAMSusPotsTest1 = MessageTest{
+	ID:   0x025,
+	Name: "SAM Sus Pots Test 1",
+	Data: []byte{0x00},
+	ExpectedValues: map[string]interface{}{
+		"suspension_angle": 0,
+	},
+}
+
+var SAMSusPotsTest2 = MessageTest{
+	ID:   0x025,
+	Name: "SAM Sus Pots Test 2",
+	Data: []byte{0x0f},
+	ExpectedValues: map[string]interface{}{
+		"suspension_angle": 15,
+	},
+}
+
+var SAMTDFTest1 = MessageTest{
+	ID:   0x026,
+	Name: "SAM TDF Test 1",
+	Data: []byte{0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"height": 0,
+	},
+}
+
+var SAMTDFTest2 = MessageTest{
+	ID:   0x026,
+	Name: "SAM TDF Test 2",
+	Data: []byte{0x00, 0x82},
+	ExpectedValues: map[string]interface{}{
+		"height": 130,
+	},
+}
+
+var SAMRearWheelspeedTest1 = MessageTest{
+	ID:   0x027,
+	Name: "SAM Rear Wheelspeed Test 1",
+	Data: []byte{0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"speed": -3276.8,
+	},
+}
+
+var SAMRearWheelspeedTest2 = MessageTest{
+	ID:   0x027,
+	Name: "SAM Rear Wheelspeed Test 2",
+	Data: []byte{0x0f, 0x44},
+	ExpectedValues: map[string]interface{}{
+		"speed": -1534.5,
+	},
+}
+
+var SAMPushrodForceTest1 = MessageTest{
+	ID:   0x028,
+	Name: "SAM Pushrod Force Test 1",
+	Data: []byte{0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"load_force": -3276.8,
+	},
+}
+var SAMPushrodForceTest2 = MessageTest{
+	ID:   0x028,
+	Name: "SAM Pushrod Force Test 2",
+	Data: []byte{0x27, 0xe9},
+	ExpectedValues: map[string]interface{}{
+		"load_force": 2691.9,
+	},
+}
+
+// bottom ones skipped
+// tcm status
+// dash warning flags
+// specific brake ir
+// ecu ping information
+
+// need to add ecu pedals data, spreadsheet data names are weird
+
 var TCMResourceTest1 = MessageTest{
 	ID:   0x02A,
 	Name: "TCM Resource Utilization Test 1",
