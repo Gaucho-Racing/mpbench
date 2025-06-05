@@ -18,8 +18,6 @@ import (
 
 func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	var tests = []MessageTest{}
-	tests = append(tests, GenerateECUTests()...)
-	tests = append(tests, GenerateACUTests()...)
 	tests = append(tests, GenerateTCMTests()...)
 
 	messageMin := 1000
@@ -96,6 +94,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 		}
 		numSent += numSignals
 	}
+	utils.SugarLogger.Infof("Sent %d messages, waiting for benchmark to complete", numSent)
 	WaitForBenchmark(numSent, db)
 	endTime := time.Now()
 	utils.SugarLogger.Infof("Benchmark completed in %s", endTime.Sub(startTime))
@@ -114,6 +113,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 		}
 		numSent += numSignals
 	}
+	utils.SugarLogger.Infof("Sent %d messages, waiting for benchmark to complete", numSent)
 	WaitForBenchmark(numSent, db)
 	endTime = time.Now()
 	utils.SugarLogger.Infof("Benchmark completed in %s", endTime.Sub(startTime))
@@ -132,6 +132,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 		}
 		numSent += numSignals
 	}
+	utils.SugarLogger.Infof("Sent %d messages, waiting for benchmark to complete", numSent)
 	WaitForBenchmark(numSent, db)
 	endTime = time.Now()
 	utils.SugarLogger.Infof("Benchmark completed in %s", endTime.Sub(startTime))
@@ -150,6 +151,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 		}
 		numSent += numSignals
 	}
+	utils.SugarLogger.Infof("Sent %d messages, waiting for benchmark to complete", numSent)
 	WaitForBenchmark(numSent, db)
 	endTime = time.Now()
 	utils.SugarLogger.Infof("Benchmark completed in %s", endTime.Sub(startTime))
