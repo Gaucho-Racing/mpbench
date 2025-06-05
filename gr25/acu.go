@@ -10,6 +10,18 @@ func GenerateACUTests() []MessageTest {
 		ACUStatusTwoTest2,
 		ACUStatusThreeTest1,
 		ACUStatusThreeTest2,
+		DCDCStatusTest1,
+		DCDCStatusTest2,
+		ACUCellDataOneTest1,
+		ACUCellDataOneTest2,
+		ACUCellDataTwoTest1,
+		ACUCellDataTwoTest2,
+		ACUCellDataThreeTest1,
+		ACUCellDataThreeTest2,
+		ACUCellDataFourTest1,
+		ACUCellDataFourTest2,
+		ACUCellDataFiveTest1,
+		ACUCellDataFiveTest2,
 	}
 
 	for i := range tests {
