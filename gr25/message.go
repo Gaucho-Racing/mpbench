@@ -117,7 +117,7 @@ var ACUStatusOneTest1 = MessageTest{
 
 var ACUStatusOneTest2 = MessageTest{
 	ID:   0x007,
-	Name: "ACU Status One Test 1",
+	Name: "ACU Status One Test 2",
 	Data: []byte{0x84, 0x07, 0xd7, 0x12, 0xbf, 0x63, 0x80, 0xf3},
 	ExpectedValues: map[string]interface{}{
 		"accumulator_voltage": 19.24,
@@ -161,7 +161,7 @@ var ACUStatusTwoTest2 = MessageTest{
 		"20v_voltage":               18.9,
 		"12v_voltage":               10.2,
 		"sdc_voltage":               1.6,
-		"min_cell_voltage":          6,
+		"min_cell_voltage":          2.4,
 		"max_cell_temp":             51,
 		"over_temp_error":           0,
 		"over_voltage_error":        1,

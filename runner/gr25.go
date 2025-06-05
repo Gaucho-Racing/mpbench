@@ -38,27 +38,27 @@ func CreateGR25Runs(commit string) ([]model.Run, error) {
 	time.Sleep(200 * time.Millisecond)
 
 	// Create gr25 benchmark run
-	id, err = service.CreateCheckRun(commit, "gr25 / benchmark")
-	if err != nil {
-		utils.SugarLogger.Errorf("Error creating check run: %v", err)
-	} else {
-		utils.SugarLogger.Infof("Check run created with ID: %d", id)
+	// id, err = service.CreateCheckRun(commit, "gr25 / benchmark")
+	// if err != nil {
+	// 	utils.SugarLogger.Errorf("Error creating check run: %v", err)
+	// } else {
+	// 	utils.SugarLogger.Infof("Check run created with ID: %d", id)
 
-		run := model.Run{
-			ID:               uuid.New().String(),
-			Commit:           commit,
-			Status:           "queued",
-			Name:             "gr25 / benchmark",
-			Service:          "gr25",
-			GithubCheckRunID: id,
-		}
-		err = service.CreateRun(run)
-		if err != nil {
-			utils.SugarLogger.Errorf("Error creating run: %v", err)
-		} else {
-			Queue.Add(run)
-			runs = append(runs, run)
-		}
-	}
+	// 	run := model.Run{
+	// 		ID:               uuid.New().String(),
+	// 		Commit:           commit,
+	// 		Status:           "queued",
+	// 		Name:             "gr25 / benchmark",
+	// 		Service:          "gr25",
+	// 		GithubCheckRunID: id,
+	// 	}
+	// 	err = service.CreateRun(run)
+	// 	if err != nil {
+	// 		utils.SugarLogger.Errorf("Error creating run: %v", err)
+	// 	} else {
+	// 		Queue.Add(run)
+	// 		runs = append(runs, run)
+	// 	}
+	// }
 	return runs, nil
 }
