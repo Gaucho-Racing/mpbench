@@ -1120,29 +1120,27 @@ var InverterStatusThreeTest1 = MessageTest{
 		"motor_temperature":    -40,
 		"over_voltage_faults":  0,
 		"under_voltage_fault":  0,
-		"inv._overtemp_fault":  0,
+		"inverter_overtemp_fault":  0,
 		"motor_overtemp_fault": 0,
 		"transistor_fault":     0,
 		"encoder_fault":        0,
-		"CAN_fault":            0,
-		"future_use":           0,
+		"can_fault":            0,
 	},
 }
 
 var InverterStatusThreeTest2 = MessageTest{
 	ID:   0x015,
 	Name: "Inverter Status Three Test 2",
-	Data: []byte{0xf2, 0x2f},
+	Data: []byte{0x64, 0x2f},
 	ExpectedValues: map[string]interface{}{
-		"motor_temperature":    202,
+		"motor_temperature":    60,
 		"over_voltage_faults":  0,
 		"under_voltage_fault":  0,
-		"inv._overtemp_fault":  1,
+		"inverter_overtemp_fault":  1,
 		"motor_overtemp_fault": 0,
 		"transistor_fault":     1,
 		"encoder_fault":        1,
-		"CAN_fault":            1,
-		"future_use":           1,
+		"can_fault":            1,
 	},
 }
 
