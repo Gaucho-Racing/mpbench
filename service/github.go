@@ -356,7 +356,10 @@ func CheckRunUnitTestConclusion(run model.Run) {
 				Text:    textBuffer.String(),
 			},
 		}
-		UpdateCheckRun(run.GithubCheckRunID, payload)
+		err := UpdateCheckRun(run.GithubCheckRunID, payload)
+		if err != nil {
+			utils.SugarLogger.Error("Failed to update check run", err)
+		}
 	} else {
 		payload := model.CheckRunPayload{
 			Name:       run.Name,
@@ -372,7 +375,10 @@ func CheckRunUnitTestConclusion(run model.Run) {
 				Text:    textBuffer.String(),
 			},
 		}
-		UpdateCheckRun(run.GithubCheckRunID, payload)
+		err := UpdateCheckRun(run.GithubCheckRunID, payload)
+		if err != nil {
+			utils.SugarLogger.Error("Failed to update check run", err)
+		}
 	}
 }
 
@@ -470,7 +476,10 @@ func CheckRunBenchmarkConclusion(run model.Run) {
 				Text:    textBuffer.String(),
 			},
 		}
-		UpdateCheckRun(run.GithubCheckRunID, payload)
+		err := UpdateCheckRun(run.GithubCheckRunID, payload)
+		if err != nil {
+			utils.SugarLogger.Error("Failed to update check run", err)
+		}
 	} else {
 		payload := model.CheckRunPayload{
 			Name:       run.Name,
@@ -486,7 +495,10 @@ func CheckRunBenchmarkConclusion(run model.Run) {
 				Text:    textBuffer.String(),
 			},
 		}
-		UpdateCheckRun(run.GithubCheckRunID, payload)
+		err := UpdateCheckRun(run.GithubCheckRunID, payload)
+		if err != nil {
+			utils.SugarLogger.Error("Failed to update check run", err)
+		}
 	}
 }
 
