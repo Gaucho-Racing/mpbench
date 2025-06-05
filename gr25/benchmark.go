@@ -17,8 +17,14 @@ import (
 )
 
 func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
-	var tests = []MessageTest{}
-	tests = append(tests, GenerateTCMTests()...)
+	var tests = []MessageTest{
+		ECUStatusOneTest1,
+		ECUStatusOneTest2,
+		ECUStatusTwoTest1,
+		ECUStatusTwoTest2,
+		ECUStatusThreeTest1,
+		ECUStatusThreeTest2,
+	}
 
 	messageMin := 1000
 	numSignals := 0
