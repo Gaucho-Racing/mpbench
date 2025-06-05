@@ -245,7 +245,7 @@ var ACUConfigOperationalParametersTest1 = MessageTest{
 	Data: []byte{0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
 		"min_cell_voltage":     2,
-		"max_cell_temperature": 0,
+		"max_cell_temp": 0,
 	},
 }
 var ACUConfigOperationalParametersTest2 = MessageTest{
@@ -254,7 +254,7 @@ var ACUConfigOperationalParametersTest2 = MessageTest{
 	Data: []byte{0x2c, 0x16},
 	ExpectedValues: map[string]interface{}{
 		"min_cell_voltage":     2.44,
-		"max_cell_temperature": 32.5,
+		"max_cell_temp": 32.5,
 	},
 }
 
@@ -1095,9 +1095,9 @@ var InverterStatusTwoTest1 = MessageTest{
 	Name: "Inverter Status Two Test 1",
 	Data: []byte{0x00, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"u_mosfet_temperature": -40,
-		"v_mosfet_temperature": -40,
-		"w_mosfet_temperature": -40,
+		"u_mosfet_temp": -40,
+		"v_mosfet_temp": -40,
+		"w_mosfet_temp": -40,
 	},
 }
 
@@ -1106,9 +1106,9 @@ var InverterStatusTwoTest2 = MessageTest{
 	Name: "Inverter Status Two Test 2",
 	Data: []byte{0x73, 0x75, 0x04},
 	ExpectedValues: map[string]interface{}{
-		"u_mosfet_temperature": 33,
-		"v_mosfet_temperature": 35,
-		"w_mosfet_temperature": 36,
+		"u_mosfet_temp": 33,
+		"v_mosfet_temp": 35,
+		"w_mosfet_temp": 36,
 	},
 }
 
@@ -1117,7 +1117,7 @@ var InverterStatusThreeTest1 = MessageTest{
 	Name: "Inverter Status Three Test 1",
 	Data: []byte{0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"motor_temperature":    -40,
+		"motor_temp":    -40,
 		"over_voltage_faults":  0,
 		"under_voltage_fault":  0,
 		"inverter_overtemp_fault":  0,
@@ -1133,7 +1133,7 @@ var InverterStatusThreeTest2 = MessageTest{
 	Name: "Inverter Status Three Test 2",
 	Data: []byte{0x64, 0x2f},
 	ExpectedValues: map[string]interface{}{
-		"motor_temperature":    60,
+		"motor_temp":    60,
 		"over_voltage_faults":  0,
 		"under_voltage_fault":  0,
 		"inverter_overtemp_fault":  1,
