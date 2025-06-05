@@ -1370,9 +1370,9 @@ var SAMIMUTest1 = MessageTest{
 		"acceleration_x":     -327.68,
 		"acceleration_y":     -327.68,
 		"acceleration_z":     -327.68,
-		"angular_velocity_x": -32.768,
-		"angular_velocity_y": -32.768,
-		"angular_velocity_z": -32.768,
+		"gyroscope_x": -32.768,
+		"gyroscope_y": -32.768,
+		"gyroscope_z": -32.768,
 	},
 }
 var SAMIMUTest2 = MessageTest{
@@ -1383,89 +1383,20 @@ var SAMIMUTest2 = MessageTest{
 		"acceleration_x":     -170.21,
 		"acceleration_y":     -77.53,
 		"acceleration_z":     -244.01,
-		"angular_velocity_x": -3.538,
-		"angular_velocity_y": 11.357,
-		"angular_velocity_z": 8.623,
+		"gyroscope_x": -3.538,
+		"gyroscope_y": 11.357,
+		"gyroscope_z": 8.623,
 	},
 }
 
-// var SAMGPSOneTest1 = MessageTest{
-// 	ID:             0x021,
-// 	Name:           "SAM GPS 1 Test 1",
-// 	Data:           []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-// 	ExpectedValues: map[string]interface{}{
-// 		// what
-// 	},
-// }
-
-// var SAMGPSOneTest2 = MessageTest{
-// 	ID:             0x021,
-// 	Name:           "SAM GPS 1 Test 2",
-// 	Data:           []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // change
-// 	ExpectedValues: map[string]interface{}{
-// 		// what
-// 	},
-// }
-
-// var SAMGPSTwoTest1 = MessageTest{
-// 	ID:             0x022,
-// 	Name:           "SAM GPS 2 Test 1",
-// 	Data:           []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-// 	ExpectedValues: map[string]interface{}{
-// 		// what
-// 	},
-// }
-
-// var SAMGPSTwoTest2 = MessageTest{
-// 	ID:             0x022,
-// 	Name:           "SAM GPS 2 Test 2",
-// 	Data:           []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // change
-// 	ExpectedValues: map[string]interface{}{
-// 		// what
-// 	},
-// }
-// var SAMGPSTimeTest1 = MessageTest{
-// 	ID:             0x023,
-// 	Name:           "SAM GPS Time Test 1",
-// 	Data:           []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-// 	ExpectedValues: map[string]interface{}{
-// 		// what
-// 	},
-// }
-
-// var SAMGPSTimeTest2 = MessageTest{
-// 	ID:             0x023,
-// 	Name:           "SAM GPS Time Test 2",
-// 	Data:           []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-// 	ExpectedValues: map[string]interface{}{
-// 		// what
-// 	},
-// }
-
-// var SAMGPSHeadingTest1 = MessageTest{
-// 	ID:             0x024,
-// 	Name:           "SAM GPS Heading Test 1",
-// 	Data:           []byte{0x00, 0x00, 0x00, 0x00},
-// 	ExpectedValues: map[string]interface{}{
-// 		// what
-// 	},
-// }
-
-// var SAMGPSHeadingTest2 = MessageTest{
-// 	ID:             0x024,
-// 	Name:           "SAM GPS Heading Test 2",
-// 	Data:           []byte{0x00, 0x00, 0x00, 0x00},
-// 	ExpectedValues: map[string]interface{}{
-// 		// what
-// 	},
-// }
+// TODO: SAM GPS SHIT 0x021 - 0x024
 
 var SAMSusPotsTest1 = MessageTest{
 	ID:   0x025,
 	Name: "SAM Sus Pots Test 1",
 	Data: []byte{0x00},
 	ExpectedValues: map[string]interface{}{
-		"suspension_angle": 0,
+		"angle": 0,
 	},
 }
 
@@ -1474,7 +1405,7 @@ var SAMSusPotsTest2 = MessageTest{
 	Name: "SAM Sus Pots Test 2",
 	Data: []byte{0x0f},
 	ExpectedValues: map[string]interface{}{
-		"suspension_angle": 15,
+		"angle": 15,
 	},
 }
 
@@ -1519,7 +1450,7 @@ var SAMPushrodForceTest1 = MessageTest{
 	Name: "SAM Pushrod Force Test 1",
 	Data: []byte{0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"load_force": -3276.8,
+		"force": -3276.8,
 	},
 }
 var SAMPushrodForceTest2 = MessageTest{
@@ -1527,7 +1458,7 @@ var SAMPushrodForceTest2 = MessageTest{
 	Name: "SAM Pushrod Force Test 2",
 	Data: []byte{0x27, 0xe9},
 	ExpectedValues: map[string]interface{}{
-		"load_force": 2691.9,
+		"force": 2691.9,
 	},
 }
 
