@@ -1095,9 +1095,9 @@ var InverterStatusTwoTest1 = MessageTest{
 	Name: "Inverter Status Two Test 1",
 	Data: []byte{0x00, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"U_MOSFET_temperature": -40,
-		"V_MOSFET_temperature": -40,
-		"W_MOSFET_temperature": -40,
+		"u_mosfet_temperature": -40,
+		"v_mosfet_temperature": -40,
+		"w_mosfet_temperature": -40,
 	},
 }
 
@@ -1106,9 +1106,9 @@ var InverterStatusTwoTest2 = MessageTest{
 	Name: "Inverter Status Two Test 2",
 	Data: []byte{0x73, 0x75, 0x04},
 	ExpectedValues: map[string]interface{}{
-		"U_MOSFET_temperature": 33,
-		"V_MOSFET_temperature": 35,
-		"W_MOSFET_temperature": -36,
+		"u_mosfet_temperature": 33,
+		"v_mosfet_temperature": 35,
+		"w_mosfet_temperature": 36,
 	},
 }
 
