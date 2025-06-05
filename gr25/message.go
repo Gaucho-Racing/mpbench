@@ -1072,9 +1072,9 @@ var InverterStatusOneTest1 = MessageTest{
 	Name: "Inverter Status One Test 1",
 	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"AC_current": -327.68,
-		"DC_current": 0,
-		"motor_RPM":  -32768,
+		"ac_current": -327.68,
+		"dc_current": 0,
+		"motor_rpm":  -32768,
 	},
 }
 
@@ -1083,9 +1083,9 @@ var InverterStatusOneTest2 = MessageTest{
 	Name: "Inverter Status One Test 2",
 	Data: []byte{0x19, 0x33, 0xec, 0x87, 0x0d, 0xb1}, // add
 	ExpectedValues: map[string]interface{}{
-		"AC_current": 7.93,
-		"DC_current": 347.96,
-		"motor_RPM":  12557,
+		"ac_current": 7.93,
+		"dc_current": 347.96,
+		"motor_rpm":  12557,
 	},
 }
 
