@@ -1462,32 +1462,7 @@ var SAMPushrodForceTest2 = MessageTest{
 	},
 }
 
-var SpecificBrakeIRTest1 = MessageTest{
-	ID:   0x02C,
-	Name: "Specific Brake IR Test 1",
-	Data: []byte{0x00, 0x00},
-	ExpectedValues: map[string]interface{}{
-		"wheel_identifier": 0,
-		"temp":             0,
-	},
-}
-
-var SpecificBrakeIRTest2 = MessageTest{
-	ID:   0x02C,
-	Name: "Specific Brake IR Test 2",
-	Data: []byte{0x01, 0x12},
-	ExpectedValues: map[string]interface{}{
-		"wheel_identifier": 1,
-		"temp":             18,
-	},
-}
-
-// bottom ones skipped
-// tcm status
-// dash warning flags
-// ecu ping information
-
-// need to add ecu pedals data, spreadsheet data names are weird
+// TODO: TCM Status 0x029
 
 var TCMResourceTest1 = MessageTest{
 	ID:   0x02A,
@@ -1531,5 +1506,68 @@ var TCMResourceTest3 = MessageTest{
 		"power_usage": 25.5,
 		"CPU_temp":    255,
 		"GPU_temp":    255,
+	},
+}
+
+var DashWarningFlagsTest1 = MessageTest{
+	ID: 0x02B,
+	Name: "Dash Warning Flags Test 1",
+	Data: []byte{0x00},
+	ExpectedValues: map[string]interface{}{
+		"bse_apps_violation": 0,
+	},
+}
+
+var DashWarningFlagsTest2 = MessageTest{
+	ID: 0x02B,
+	Name: "Dash Warning Flags Test 2",
+	Data: []byte{0xFF},
+	ExpectedValues: map[string]interface{}{
+		"bse_apps_violation": 1,
+	},
+}
+
+// TODO: Figure out best way to handle these
+// var SpecificBrakeIRTest1 = MessageTest{
+// 	ID:   0x02C,
+// 	Name: "Specific Brake IR Test 1",
+// 	Data: []byte{0x00, 0x00},
+// 	ExpectedValues: map[string]interface{}{
+// 		"wheel_identifier": 0,
+// 		"temp":             0,
+// 	},
+// }
+
+// var SpecificBrakeIRTest2 = MessageTest{
+// 	ID:   0x02C,
+// 	Name: "Specific Brake IR Test 2",
+// 	Data: []byte{0x01, 0x12},
+// 	ExpectedValues: map[string]interface{}{
+// 		"wheel_identifier": 1,
+// 		"temp":             18,
+// 	},
+// }
+
+var ECUPedalsDataTest1 = MessageTest{
+	ID: 0x02E,
+	Name: "ECU Pedals Data Test 1",
+	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+	ExpectedValues: map[string]interface{}{
+		"apps_one": 0,
+		"apps_two": 0,
+		"brake_pressure": 0,
+		"brake_force": 0,
+	},
+}
+
+var ECUPedalsDataTest2 = MessageTest{
+	ID: 0x02E,
+	Name: "ECU Pedals Data Test 2",
+	Data: []byte{0xee, 0x5b, 0xfa, 0xff, 0x24, 0xcc, 0x1e, 0x02},
+	ExpectedValues: map[string]interface{}{
+		"apps_one": 35.9,
+		"apps_two": 99.99,
+		"brake_pressure": 79.74,
+		"brake_force": 0.83,
 	},
 }
