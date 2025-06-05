@@ -85,7 +85,7 @@ func (m MessageTest) Run(run model.Run, mqttClient *mq.Client, db *gorm.DB) bool
 	}
 	service.CreateRunTest(run_test)
 
-	SendMqttMessage(mqttClient, fmt.Sprintf("gr25/%s/%s/%03x", VehicleID, m.Node, m.ID), result)
+	SendMqttMessage(mqttClient, fmt.Sprintf("gr25/%s/%s/0x%03x", VehicleID, m.Node, m.ID), result)
 	WaitForSignals(len(m.ExpectedValues), timestamp, db)
 	status := m.Verify(run_test, db, timestamp)
 	if status == "passed" {

@@ -27,18 +27,18 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 		numSignals += len(test.ExpectedValues)
 	}
 
-	run_test1 := model.RunTest{
-		ID:     uuid.New().String(),
-		RunID:  run.ID,
-		Name:   "Fast (10000 @ 10ms)",
-		Status: "in_progress",
-	}
-	service.CreateRunTest(run_test1)
+	// run_test1 := model.RunTest{
+	// 	ID:     uuid.New().String(),
+	// 	RunID:  run.ID,
+	// 	Name:   "Fast (10000 @ 10ms)",
+	// 	Status: "in_progress",
+	// }
+	// service.CreateRunTest(run_test1)
 
 	run_test2 := model.RunTest{
 		ID:     uuid.New().String(),
 		RunID:  run.ID,
-		Name:   "Fast (10000 @ 50ms)",
+		Name:   "Extra Fast (10000 @ 50ms)",
 		Status: "in_progress",
 	}
 	service.CreateRunTest(run_test2)
@@ -54,7 +54,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	run_test4 := model.RunTest{
 		ID:     uuid.New().String(),
 		RunID:  run.ID,
-		Name:   "Fast (10000 @ 250ms)",
+		Name:   "Moderate (10000 @ 250ms)",
 		Status: "in_progress",
 	}
 	service.CreateRunTest(run_test4)
@@ -62,34 +62,34 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	run_test5 := model.RunTest{
 		ID:     uuid.New().String(),
 		RunID:  run.ID,
-		Name:   "Fast (10000 @ 500ms)",
+		Name:   "Slow (10000 @ 500ms)",
 		Status: "in_progress",
 	}
 	service.CreateRunTest(run_test5)
 
-	utils.SugarLogger.Infof("STARTING BENCHMARK: FAST (10000 @ 10ms)")
+	// utils.SugarLogger.Infof("STARTING BENCHMARK: FAST (10000 @ 10ms)")
+	// startTime := time.Now()
+	// messageMin := 10000
+	// numSent := 0
+	// for numSent < messageMin {
+	// 	for _, test := range tests {
+	// 		PublishMessageFuzz(mqttClient, test)
+	// 		time.Sleep(10 * time.Millisecond)
+	// 	}
+	// 	numSent += numSignals
+	// }
+	// WaitForBenchmark(numSent, db)
+	// endTime := time.Now()
+	// utils.SugarLogger.Infof("Benchmark completed in %s", endTime.Sub(startTime))
+	// results := GenerateBenchmarkResults(run, db)
+	// status := VerifyBenchmarkResults(run_test1, endTime.Sub(startTime), results)
+	// run_test1.Status = status
+	// service.CreateRunTest(run_test1)
+
+	utils.SugarLogger.Infof("STARTING BENCHMARK: EXTRA FAST (10000 @ 50ms)")
 	startTime := time.Now()
 	messageMin := 10000
 	numSent := 0
-	for numSent < messageMin {
-		for _, test := range tests {
-			PublishMessageFuzz(mqttClient, test)
-			time.Sleep(10 * time.Millisecond)
-		}
-		numSent += numSignals
-	}
-	WaitForBenchmark(numSent, db)
-	endTime := time.Now()
-	utils.SugarLogger.Infof("Benchmark completed in %s", endTime.Sub(startTime))
-	results := GenerateBenchmarkResults(run, db)
-	status := VerifyBenchmarkResults(run_test1, endTime.Sub(startTime), results)
-	run_test1.Status = status
-	service.CreateRunTest(run_test1)
-
-	utils.SugarLogger.Infof("STARTING BENCHMARK: FAST (10000 @ 50ms)")
-	startTime = time.Now()
-	messageMin = 10000
-	numSent = 0
 	for numSent < messageMin {
 		for _, test := range tests {
 			PublishMessageFuzz(mqttClient, test)
@@ -98,10 +98,10 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 		numSent += numSignals
 	}
 	WaitForBenchmark(numSent, db)
-	endTime = time.Now()
+	endTime := time.Now()
 	utils.SugarLogger.Infof("Benchmark completed in %s", endTime.Sub(startTime))
-	results = GenerateBenchmarkResults(run, db)
-	status = VerifyBenchmarkResults(run_test2, endTime.Sub(startTime), results)
+	results := GenerateBenchmarkResults(run, db)
+	status := VerifyBenchmarkResults(run_test2, endTime.Sub(startTime), results)
 	run_test2.Status = status
 	service.CreateRunTest(run_test2)
 
@@ -124,7 +124,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	run_test3.Status = status
 	service.CreateRunTest(run_test3)
 
-	utils.SugarLogger.Infof("STARTING BENCHMARK: FAST (10000 @ 250ms)")
+	utils.SugarLogger.Infof("STARTING BENCHMARK: MODERATE (10000 @ 250ms)")
 	startTime = time.Now()
 	messageMin = 10000
 	numSent = 0
@@ -143,7 +143,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	run_test4.Status = status
 	service.CreateRunTest(run_test4)
 
-	utils.SugarLogger.Infof("STARTING BENCHMARK: FAST (10000 @ 500ms)")
+	utils.SugarLogger.Infof("STARTING BENCHMARK: SLOW (10000 @ 500ms)")
 	startTime = time.Now()
 	messageMin = 10000
 	numSent = 0
@@ -176,7 +176,7 @@ func PublishMessageFuzz(mqttClient *mq.Client, m MessageTest) {
 	}
 	copy(result[10:], fuzz)
 
-	SendMqttMessage(mqttClient, fmt.Sprintf("gr25/%s/%s/%03x", VehicleID, m.Node, m.ID), result)
+	SendMqttMessage(mqttClient, fmt.Sprintf("gr25/%s/%s/0x%03x", VehicleID, m.Node, m.ID), result)
 }
 
 func WaitForBenchmark(numSignals int, db *gorm.DB) {
