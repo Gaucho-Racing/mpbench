@@ -2,6 +2,8 @@ package gr25
 
 import "fmt"
 
+// TODO: REWORK ALL THESE TESTS TO PREPEND PROPER NODE IDS
+
 func GenerateSAM1Tests() []MessageTest {
 	var tests = []MessageTest{
 		SAMBrakeIRTest1,

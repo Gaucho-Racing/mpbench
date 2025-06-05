@@ -2,6 +2,10 @@ package gr25
 
 import "fmt"
 
+// ------------------------------------------------------------
+// GR INVERTERS (inverter_1, inverter_2, inverter_3, inverter_4)
+// ------------------------------------------------------------
+
 func GenerateGRInverter1Tests() []MessageTest {
 	var tests = []MessageTest{
 		InverterStatusOneTest1,
@@ -13,11 +17,11 @@ func GenerateGRInverter1Tests() []MessageTest {
 	}
 
 	for i := range tests {
-		tests[i].Node = "GR_inverter_1"
-		tests[i].Name = fmt.Sprintf("GR Inverter 1 → %s", tests[i].Name)
+		tests[i].Node = "inverter_1"
+		tests[i].Name = fmt.Sprintf("Inverter 1 → %s", tests[i].Name)
 		newExpectedValues := make(map[string]interface{})
 		for k, v := range tests[i].ExpectedValues {
-			signalName := fmt.Sprintf("GR_inverter_1_%s", k)
+			signalName := fmt.Sprintf("inverter_1_%s", k)
 			newExpectedValues[signalName] = v
 		}
 		tests[i].ExpectedValues = newExpectedValues
@@ -36,11 +40,11 @@ func GenerateGRInverter2Tests() []MessageTest {
 	}
 
 	for i := range tests {
-		tests[i].Node = "GR_inverter_2"
-		tests[i].Name = fmt.Sprintf("GR Inverter 2 → %s", tests[i].Name)
+		tests[i].Node = "inverter_2"
+		tests[i].Name = fmt.Sprintf("Inverter 2 → %s", tests[i].Name)
 		newExpectedValues := make(map[string]interface{})
 		for k, v := range tests[i].ExpectedValues {
-			signalName := fmt.Sprintf("GR_inverter_2_%s", k)
+			signalName := fmt.Sprintf("inverter_2_%s", k)
 			newExpectedValues[signalName] = v
 		}
 		tests[i].ExpectedValues = newExpectedValues
@@ -59,11 +63,11 @@ func GenerateGRInverter3Tests() []MessageTest {
 	}
 
 	for i := range tests {
-		tests[i].Node = "GR_inverter_3"
-		tests[i].Name = fmt.Sprintf("GR Inverter 3 → %s", tests[i].Name)
+		tests[i].Node = "inverter_3"
+		tests[i].Name = fmt.Sprintf("Inverter 3 → %s", tests[i].Name)
 		newExpectedValues := make(map[string]interface{})
 		for k, v := range tests[i].ExpectedValues {
-			signalName := fmt.Sprintf("GR_inverter_3_%s", k)
+			signalName := fmt.Sprintf("inverter_3_%s", k)
 			newExpectedValues[signalName] = v
 		}
 		tests[i].ExpectedValues = newExpectedValues
@@ -82,14 +86,18 @@ func GenerateGRInverter4Tests() []MessageTest {
 	}
 
 	for i := range tests {
-		tests[i].Node = "GR_inverter_4"
-		tests[i].Name = fmt.Sprintf("GR Inverter 4 → %s", tests[i].Name)
+		tests[i].Node = "inverter_4"
+		tests[i].Name = fmt.Sprintf("Inverter 4 → %s", tests[i].Name)
 		newExpectedValues := make(map[string]interface{})
 		for k, v := range tests[i].ExpectedValues {
-			signalName := fmt.Sprintf("GR_inverter_4_%s", k)
+			signalName := fmt.Sprintf("inverter_4_%s", k)
 			newExpectedValues[signalName] = v
 		}
 		tests[i].ExpectedValues = newExpectedValues
 	}
 	return tests
 }
+
+// ------------------------------------------------------------
+// DTI INVERTERS (inverter_dti)
+// ------------------------------------------------------------

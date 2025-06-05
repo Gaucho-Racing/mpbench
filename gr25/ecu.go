@@ -24,12 +24,10 @@ func GenerateECUTests() []MessageTest {
 		FanCommandTest2,
 		DashConfigTest1,
 		DashConfigTest2,
-		// DashWarningFlags,
-		// SteeringConfigTest1,
-		// SteeringConfigTest2,
-		SpecificBrakeIRTest1,
-		SpecificBrakeIRTest2,
-		// edu pedals data
+		DashWarningFlagsTest1,
+		DashWarningFlagsTest2,
+		ECUPedalsDataTest1,
+		ECUPedalsDataTest2,
 	}
 
 	for i := range tests {

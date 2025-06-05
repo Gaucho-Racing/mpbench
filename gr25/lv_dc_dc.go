@@ -9,11 +9,11 @@ func GenerateLVDCDCTests() []MessageTest {
 	}
 
 	for i := range tests {
-		tests[i].Node = "LV_DC-DC"
+		tests[i].Node = "lv_dc_dc"
 		tests[i].Name = fmt.Sprintf("LV DC-DC → %s", tests[i].Name)
 		newExpectedValues := make(map[string]interface{})
 		for k, v := range tests[i].ExpectedValues {
-			signalName := fmt.Sprintf("LV_DC-DC_%s", k)
+			signalName := fmt.Sprintf("lv_dc_dc_%s", k)
 			newExpectedValues[signalName] = v
 		}
 		tests[i].ExpectedValues = newExpectedValues
