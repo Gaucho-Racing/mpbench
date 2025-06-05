@@ -1469,13 +1469,13 @@ var TCMResourceTest1 = MessageTest{
 	Name: "TCM Resource Utilization Test 1",
 	Data: []byte{0x35, 0x1b, 0x58, 0x03, 0xB8, 0x4b, 0x59},
 	ExpectedValues: map[string]interface{}{
-		"CPU_util":    53,
-		"GPU_util":    27,
-		"RAM_util":    88,
+		"cpu_util":    53,
+		"gpu_util":    27,
+		"ram_util":    88,
 		"disk_util":   3,
-		"power_usage": 18.4,
-		"CPU_temp":    75,
-		"GPU_temp":    89,
+		"power_util": 18.4,
+		"cpu_temp":    75,
+		"gpu_temp":    89,
 	},
 }
 
@@ -1484,13 +1484,13 @@ var TCMResourceTest2 = MessageTest{
 	Name: "TCM Resource Utilization Test 2",
 	Data: []byte{0x00, 0x00, 0x01, 0x02, 0x03, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"CPU_util":    0,
-		"GPU_util":    0,
-		"RAM_util":    1,
+		"cpu_util":    0,
+		"gpu_util":    0,
+		"ram_util":    1,
 		"disk_util":   2,
-		"power_usage": 0.3,
-		"CPU_temp":    0,
-		"GPU_temp":    0,
+		"power_util": 0.3,
+		"cpu_temp":    0,
+		"gpu_temp":    0,
 	},
 }
 
@@ -1499,13 +1499,13 @@ var TCMResourceTest3 = MessageTest{
 	Name: "TCM Resource Utilization Test 3",
 	Data: []byte{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
 	ExpectedValues: map[string]interface{}{
-		"CPU_util":    255,
-		"GPU_util":    255,
-		"RAM_util":    255,
+		"cpu_util":    255,
+		"gpu_util":    255,
+		"ram_util":    255,
 		"disk_util":   255,
-		"power_usage": 25.5,
-		"CPU_temp":    255,
-		"GPU_temp":    255,
+		"power_util": 25.5,
+		"cpu_temp":    255,
+		"gpu_temp":    255,
 	},
 }
 
