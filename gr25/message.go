@@ -204,7 +204,7 @@ var ACUStatusThreeTest2 = MessageTest{
 
 var ACUPrechargeTest1 = MessageTest{
 	ID:   0x00A,
-	Name: "ACU Status Three Test 1",
+	Name: "ACU Precharge Test 1",
 	Data: []byte{0x00},
 	ExpectedValues: map[string]interface{}{
 		"set_ts_active": 0,
@@ -213,7 +213,7 @@ var ACUPrechargeTest1 = MessageTest{
 
 var ACUPrechargeTest2 = MessageTest{
 	ID:   0x00A,
-	Name: "ACU Status Three Test 2",
+	Name: "ACU Precharge Test 2",
 	Data: []byte{0x01},
 	ExpectedValues: map[string]interface{}{
 		"set_ts_active": 1,
