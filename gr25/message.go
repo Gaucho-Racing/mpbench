@@ -1050,7 +1050,7 @@ var DCDCStatusTest1 = MessageTest{
 		"output_voltage": 0,
 		"input_current":  0,
 		"output_current": 0,
-		"DC-DC_temp":     0,
+		"dc_dc_temp":     0,
 	},
 }
 
@@ -1063,7 +1063,7 @@ var DCDCStatusTest2 = MessageTest{
 		"output_voltage": 11.09,
 		"input_current":  9.9,
 		"output_current": 18.7,
-		"DC-DC_temp":     214,
+		"dc_dc_temp":     214,
 	},
 }
 
