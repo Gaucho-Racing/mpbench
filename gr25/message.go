@@ -207,7 +207,7 @@ var ACUPrechargeTest1 = MessageTest{
 	Name: "ACU Status Three Test 1",
 	Data: []byte{0x00},
 	ExpectedValues: map[string]interface{}{
-		"set_TS_active": 0,
+		"set_ts_active": 0,
 	},
 }
 
@@ -216,7 +216,7 @@ var ACUPrechargeTest2 = MessageTest{
 	Name: "ACU Status Three Test 2",
 	Data: []byte{0x01},
 	ExpectedValues: map[string]interface{}{
-		"set_TS_active": 1,
+		"set_ts_active": 1,
 	},
 }
 var ACUConfigChargeParametersTest1 = MessageTest{
