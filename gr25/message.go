@@ -1149,9 +1149,9 @@ var InverterConfigTest1 = MessageTest{
 	Name: "Inverter Config Test 1",
 	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"max_AC_current":         -327.68,
-		"max_DC_current":         -327.68,
-		"absolute_max_RPM_limit": -32768,
+		"max_ac_current":         -327.68,
+		"max_dc_current":         -327.68,
+		"absolute_max_rpm_limit": -32768,
 		"motor_direction":        0,
 	},
 }
@@ -1161,9 +1161,9 @@ var InverterConfigTest2 = MessageTest{
 	Name: "Inverter Config Test 2",
 	Data: []byte{0xfa, 0xa8, 0x54, 0xd3, 0x9f, 0xed, 0x01},
 	ExpectedValues: map[string]interface{}{
-		"max_AC_current":         104.9,
-		"max_DC_current":         213.32,
-		"absolute_max_RPM_limit": 38063,
+		"max_ac_current":         104.9,
+		"max_dc_current":         213.32,
+		"absolute_max_rpm_limit": 38063,
 		"motor_direction":        1,
 	},
 }
@@ -1173,9 +1173,9 @@ var InverterCommandTest1 = MessageTest{
 	Name: "Inverter Command Test 1",
 	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"set_AC_current":  -327.68,
-		"set_DC_current":  -327.68,
-		"RPM_limit":       -32768,
+		"set_ac_current":  -327.68,
+		"set_dc_current":  -327.68,
+		"rpm_limit":       -32768,
 		"field_weakening": 0,
 		"drive_enable":    0,
 	},
@@ -1186,9 +1186,9 @@ var InverterCommandTest2 = MessageTest{
 	Name: "Inverter Command Test 2",
 	Data: []byte{0x66, 0x70, 0x0b, 0x3c, 0x0f, 0x4a, 0xed, 0x01},
 	ExpectedValues: map[string]interface{}{
-		"set_AC_current":  -39.94,
-		"set_DC_current":  -173.97,
-		"RPM_limit":       -13809,
+		"set_ac_current":  -39.94,
+		"set_dc_current":  -173.97,
+		"rpm_limit":       -13809,
 		"field_weakening": 23.7,
 		"drive_enable":    1,
 	},
