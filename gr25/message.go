@@ -1289,7 +1289,7 @@ var DashConfigTest2 = MessageTest{
 	},
 }
 
-// // check
+// TODO: Steering Status 0x01C
 // var SteeringStatusTest1 = MessageTest{
 // 	ID:   0x01C,
 // 	Name: "Steering Status Test 1",
@@ -1305,7 +1305,6 @@ var DashConfigTest2 = MessageTest{
 // 	},
 // }
 
-// // check and fill
 // var SteeringStatusTest2 = MessageTest{
 // 	ID:   0x01C,
 // 	Name: "Steering Status Test 2",
@@ -1318,25 +1317,6 @@ var DashConfigTest2 = MessageTest{
 // 		"button_2":           0,
 // 		"button_3":           0,
 // 		"button_4":           0,
-// 	},
-// }
-
-// // reserved
-// var SteeringConfigTest1 = MessageTest{
-// 	ID:   0x01D,
-// 	Name: "Steering Config Test 1",
-// 	Data: []byte{0x00},
-// 	ExpectedValues: map[string]interface{}{
-// 		"reserved": 0, // ??? what
-// 	},
-// }
-
-// var SteeringConfigTest2 = MessageTest{
-// 	ID:   0x01D,
-// 	Name: "Steering Config Test 2",
-// 	Data: []byte{0x00},
-// 	ExpectedValues: map[string]interface{}{
-// 		"reserved": 0, // ??? what
 // 	},
 // }
 
@@ -1387,12 +1367,12 @@ var SAMIMUTest1 = MessageTest{
 	Name: "SAM IMU Test 1",
 	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"acceleration_in_X-axis":     -327.68,
-		"acceleration_in_Y-axis":     -327.68,
-		"acceleration_in_Z-axis":     -327.68,
-		"angular_velocity_in_X-axis": -32.768,
-		"angular_velocity_in_Y-axis": -32.768,
-		"angular_velocity_in_Z-axis": -32.768,
+		"acceleration_x":     -327.68,
+		"acceleration_y":     -327.68,
+		"acceleration_z":     -327.68,
+		"angular_velocity_x": -32.768,
+		"angular_velocity_y": -32.768,
+		"angular_velocity_z": -32.768,
 	},
 }
 var SAMIMUTest2 = MessageTest{
@@ -1400,12 +1380,12 @@ var SAMIMUTest2 = MessageTest{
 	Name: "SAM IMU Test 2",
 	Data: []byte{0x7d, 0xc2, 0xb7, 0x61, 0xaf, 0x20, 0x2e, 0x72, 0x5d, 0xac, 0xaf, 0xa1},
 	ExpectedValues: map[string]interface{}{
-		"acceleration_in_X-axis":     -170.21,
-		"acceleration_in_Y-axis":     -77.53,
-		"acceleration_in_Z-axis":     -244.01,
-		"angular_velocity_in_X-axis": -3.538,
-		"angular_velocity_in_Y-axis": 11.357,
-		"angular_velocity_in_Z-axis": 8.623,
+		"acceleration_x":     -170.21,
+		"acceleration_y":     -77.53,
+		"acceleration_z":     -244.01,
+		"angular_velocity_x": -3.538,
+		"angular_velocity_y": 11.357,
+		"angular_velocity_z": 8.623,
 	},
 }
 
