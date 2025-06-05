@@ -341,6 +341,12 @@ func CheckRunUnitTestConclusion(run model.Run) {
 		textBuffer.WriteString(RunTestsToResultString(passed))
 	}
 
+	// GitHub API has a 65535 character limit for check run output
+	if textBuffer.Len() > 65535 {
+		utils.SugarLogger.Warnf("Check run output exceeds 65535 characters, truncating")
+		textBuffer.Truncate(65535)
+	}
+
 	if success {
 		payload := model.CheckRunPayload{
 			Name:       run.Name,
@@ -459,6 +465,12 @@ func CheckRunBenchmarkConclusion(run model.Run) {
 	if len(passed) > 0 {
 		textBuffer.WriteString("\n# Passed Tests\n\n")
 		textBuffer.WriteString(RunTestsToResultString(passed))
+	}
+
+	// GitHub API has a 65535 character limit for check run output
+	if textBuffer.Len() > 65535 {
+		utils.SugarLogger.Warnf("Check run output exceeds 65535 characters, truncating")
+		textBuffer.Truncate(65535)
 	}
 
 	if success {
