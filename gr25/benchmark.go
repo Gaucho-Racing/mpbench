@@ -22,6 +22,7 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 	tests = append(tests, GenerateACUTests()...)
 	tests = append(tests, GenerateTCMTests()...)
 
+	messageMin := 1000
 	numSignals := 0
 	for _, test := range tests {
 		numSignals += len(test.ExpectedValues)
@@ -69,7 +70,6 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 
 	// utils.SugarLogger.Infof("STARTING BENCHMARK: FAST (10000 @ 10ms)")
 	// startTime := time.Now()
-	// messageMin := 10000
 	// numSent := 0
 	// for numSent < messageMin {
 	// 	for _, test := range tests {
@@ -88,7 +88,6 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 
 	utils.SugarLogger.Infof("STARTING BENCHMARK: EXTRA FAST (10000 @ 50ms)")
 	startTime := time.Now()
-	messageMin := 10000
 	numSent := 0
 	for numSent < messageMin {
 		for _, test := range tests {
@@ -107,7 +106,6 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 
 	utils.SugarLogger.Infof("STARTING BENCHMARK: FAST (10000 @ 100ms)")
 	startTime = time.Now()
-	messageMin = 10000
 	numSent = 0
 	for numSent < messageMin {
 		for _, test := range tests {
@@ -126,7 +124,6 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 
 	utils.SugarLogger.Infof("STARTING BENCHMARK: MODERATE (10000 @ 250ms)")
 	startTime = time.Now()
-	messageMin = 10000
 	numSent = 0
 	for numSent < messageMin {
 		for _, test := range tests {
@@ -145,7 +142,6 @@ func RunBenchmark(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 
 	utils.SugarLogger.Infof("STARTING BENCHMARK: SLOW (10000 @ 500ms)")
 	startTime = time.Now()
-	messageMin = 10000
 	numSent = 0
 	for numSent < messageMin {
 		for _, test := range tests {

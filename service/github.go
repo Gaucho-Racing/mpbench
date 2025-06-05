@@ -262,6 +262,8 @@ func GenerateCheckRunConclusion(runID string) {
 }
 
 func CheckRunUnitTestConclusion(run model.Run) {
+	utils.SugarLogger.Infof("Generating check run conclusion for run ID: %s (check run ID: %d)", run.ID, run.GithubCheckRunID)
+
 	passed := make([]model.RunTest, 0)
 	partial := make([]model.RunTest, 0)
 	failed := make([]model.RunTest, 0)
@@ -375,23 +377,8 @@ func CheckRunUnitTestConclusion(run model.Run) {
 }
 
 func CheckRunBenchmarkConclusion(run model.Run) {
-	// textBuffer := bytes.NewBufferString("")
-	// textBuffer.WriteString("# Summary\n\n")
-	// payload := model.CheckRunPayload{
-	// 	Name:       run.Name,
-	// 	Status:     "completed",
-	// 	Conclusion: "failure",
-	// 	Output: struct {
-	// 		Title   string `json:"title,omitempty"`
-	// 		Summary string `json:"summary,omitempty"`
-	// 		Text    string `json:"text,omitempty"`
-	// 	}{
-	// 		Title:   fmt.Sprintf("MPBench %s Unit Tests", run.Service),
-	// 		Summary: fmt.Sprintf("Run ID: %s\n\n**Note:** Benchmarking is currently unimplemented, this check run will always fail.", run.ID),
-	// 		Text:    textBuffer.String(),
-	// 	},
-	// }
-	// UpdateCheckRun(run.GithubCheckRunID, payload)
+	utils.SugarLogger.Infof("Generating check run conclusion for run ID: %s (check run ID: %d)", run.ID, run.GithubCheckRunID)
+	
 	passed := make([]model.RunTest, 0)
 	partial := make([]model.RunTest, 0)
 	failed := make([]model.RunTest, 0)
