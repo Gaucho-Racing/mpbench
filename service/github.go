@@ -375,23 +375,132 @@ func CheckRunUnitTestConclusion(run model.Run) {
 }
 
 func CheckRunBenchmarkConclusion(run model.Run) {
+	// textBuffer := bytes.NewBufferString("")
+	// textBuffer.WriteString("# Summary\n\n")
+	// payload := model.CheckRunPayload{
+	// 	Name:       run.Name,
+	// 	Status:     "completed",
+	// 	Conclusion: "failure",
+	// 	Output: struct {
+	// 		Title   string `json:"title,omitempty"`
+	// 		Summary string `json:"summary,omitempty"`
+	// 		Text    string `json:"text,omitempty"`
+	// 	}{
+	// 		Title:   fmt.Sprintf("MPBench %s Unit Tests", run.Service),
+	// 		Summary: fmt.Sprintf("Run ID: %s\n\n**Note:** Benchmarking is currently unimplemented, this check run will always fail.", run.ID),
+	// 		Text:    textBuffer.String(),
+	// 	},
+	// }
+	// UpdateCheckRun(run.GithubCheckRunID, payload)
+	passed := make([]model.RunTest, 0)
+	partial := make([]model.RunTest, 0)
+	failed := make([]model.RunTest, 0)
+	success := true
+	for _, test := range run.RunTests {
+		if test.Status == "passed" {
+			passed = append(passed, test)
+		} else if test.Status == "partial" {
+			partial = append(partial, test)
+		} else {
+			failed = append(failed, test)
+		}
+	}
+
+	// For the github check run, we fail if there are any partial or failed tests
+	if len(partial) > 0 || len(failed) > 0 {
+		success = false
+	}
+
+	allTests := run.RunTests
+	sort.Slice(allTests, func(i, j int) bool {
+		return allTests[i].Name < allTests[j].Name
+	})
+	sort.Slice(passed, func(i, j int) bool {
+		return passed[i].Name < passed[j].Name
+	})
+	sort.Slice(partial, func(i, j int) bool {
+		return partial[i].Name < partial[j].Name
+	})
+	sort.Slice(failed, func(i, j int) bool {
+		return failed[i].Name < failed[j].Name
+	})
+
 	textBuffer := bytes.NewBufferString("")
 	textBuffer.WriteString("# Summary\n\n")
-	payload := model.CheckRunPayload{
-		Name:       run.Name,
-		Status:     "completed",
-		Conclusion: "failure",
-		Output: struct {
-			Title   string `json:"title,omitempty"`
-			Summary string `json:"summary,omitempty"`
-			Text    string `json:"text,omitempty"`
-		}{
-			Title:   fmt.Sprintf("MPBench %s Unit Tests", run.Service),
-			Summary: fmt.Sprintf("Run ID: %s\n\n**Note:** Benchmarking is currently unimplemented, this check run will always fail.", run.ID),
-			Text:    textBuffer.String(),
-		},
+	textBuffer.WriteString("| ID | Name | Status | Progress |\n")
+	textBuffer.WriteString("|----|------|--------|----------|\n")
+	for _, test := range allTests {
+		numPassed := 0
+		total := len(test.RunTestResults)
+		for _, result := range test.RunTestResults {
+			if result.Status == "passed" {
+				numPassed++
+			}
+		}
+		var status string
+		if test.Status == "passed" {
+			status = "✅ PASS"
+		} else if numPassed == 0 {
+			status = "❌ FAIL"
+		} else {
+			status = "⚠️ PARTIAL"
+		}
+		parts := strings.SplitN(test.Name, " ", 2) // Split on first space only
+		textBuffer.WriteString(fmt.Sprintf("%s | %s | %s | %d/%d (%d%%)\n",
+			parts[0], // hex ID (e.g., "0x003")
+			parts[1], // actual name
+			status,
+			numPassed,
+			total,
+			(numPassed*100)/total))
 	}
-	UpdateCheckRun(run.GithubCheckRunID, payload)
+
+	if len(partial) > 0 {
+		textBuffer.WriteString("\n# Partially Failed Tests\n\n")
+		textBuffer.WriteString(RunTestsToResultString(partial))
+	}
+	if len(failed) > 0 {
+		textBuffer.WriteString("\n# Failed Tests\n\n")
+		textBuffer.WriteString(RunTestsToResultString(failed))
+	}
+	if len(passed) > 0 {
+		textBuffer.WriteString("\n# Passed Tests\n\n")
+		textBuffer.WriteString(RunTestsToResultString(passed))
+	}
+
+	if success {
+		payload := model.CheckRunPayload{
+			Name:       run.Name,
+			Status:     "completed",
+			Conclusion: "success",
+			Output: struct {
+				Title   string `json:"title,omitempty"`
+				Summary string `json:"summary,omitempty"`
+				Text    string `json:"text,omitempty"`
+			}{
+				Title:   fmt.Sprintf("MPBench %s Benchmark", run.Service),
+				Summary: fmt.Sprintf("Run ID: %s\n✅ %d tests passed\n⚠️ %d tests partially passed\n❌ %d tests failed", run.ID, len(passed), len(partial), len(failed)),
+				Text:    textBuffer.String(),
+			},
+		}
+		UpdateCheckRun(run.GithubCheckRunID, payload)
+	} else {
+		payload := model.CheckRunPayload{
+			Name:       run.Name,
+			Status:     "completed",
+			Conclusion: "failure",
+			Output: struct {
+				Title   string `json:"title,omitempty"`
+				Summary string `json:"summary,omitempty"`
+				Text    string `json:"text,omitempty"`
+			}{
+				Title:   fmt.Sprintf("MPBench %s Benchmark", run.Service),
+				Summary: fmt.Sprintf("Run ID: %s\n✅ %d tests passed\n⚠️ %d tests partially passed\n❌ %d tests failed", run.ID, len(passed), len(partial), len(failed)),
+				Text:    textBuffer.String(),
+			},
+		}
+		UpdateCheckRun(run.GithubCheckRunID, payload)
+	}
 }
 
 func RunTestsToResultString(run_test []model.RunTest) string {
