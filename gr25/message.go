@@ -1238,11 +1238,9 @@ var DashStatusTest1 = MessageTest{
 	Name: "Dash Status Test 1",
 	Data: []byte{0x00, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"BMS_LED":         0,
-		"IMD_LED":         0,
-		"BSPD_LED":        0,
-		"TS_button_data":  0,
-		"RTD_button_data": 0,
+		"bms_led":         0,
+		"imd_led":         0,
+		"bspd_led":        0,
 	},
 }
 
@@ -1251,11 +1249,9 @@ var DashStatusTest2 = MessageTest{
 	Name: "Dash Status Test 2",
 	Data: []byte{0x05, 0x1e, 0xF4},
 	ExpectedValues: map[string]interface{}{
-		"BMS_LED":         1,
-		"IMD_LED":         0,
-		"BSPD_LED":        1,
-		"TS_button_data":  3,
-		"RTD_button_data": 1.2, // check, 2s complement -12
+		"bms_led":         1,
+		"imd_led":         0,
+		"bspd_led":        1,
 	},
 }
 
