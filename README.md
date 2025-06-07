@@ -1,4 +1,4 @@
-<img src="/assests/mpbench.png" alt="mpbench logo" width="50" align="left" style="margin-right: 10px;">
+<img src="https://github.com/Gaucho-Racing/mpbench/blob/main/assets/mpbench.png?raw=true" alt="mpbench logo" width="30" align="left" style="margin-right: 10px;">
 
 # mpbench
 
