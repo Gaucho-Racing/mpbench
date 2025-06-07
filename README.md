@@ -1,6 +1,6 @@
-<img src="https://github.com/Gaucho-Racing/mpbench/blob/main/assets/mpbench.png?raw=true" alt="mpbench logo" width="30" align="left" style="margin-right: 10px;">
-
 # mpbench
+
+<img align="right" width="120px" src="assets/mpbench.png" alt="rincon-logo">
 
 [![build](https://github.com/Gaucho-Racing/mpbench/actions/workflows/build.yml/badge.svg)](https://github.com/Gaucho-Racing/mpbench/actions/workflows/build.yml)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/c761998a-1e64-4f7c-9d31-7e69d63b30c0/deploy-status)](https://app.netlify.com/sites/gr-mpbench/deploys)
