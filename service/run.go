@@ -17,6 +17,16 @@ func GetAllRuns() []model.Run {
 	return runs
 }
 
+func GetMostRecentRuns(limit int) []model.Run {
+	var runs []model.Run
+	database.DB.Order("created_at DESC").Limit(limit).Find(&runs)
+	for i, run := range runs {
+		run.RunTests = GetRunTestsByRunID(run.ID)
+		runs[i] = run
+	}
+	return runs
+}
+
 func GetRunsByCommit(commit string) []model.Run {
 	var runs []model.Run
 	database.DB.Where("commit = ?", commit).Order("created_at DESC").Find(&runs)

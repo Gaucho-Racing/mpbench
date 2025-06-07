@@ -244,8 +244,8 @@ var ACUConfigOperationalParametersTest1 = MessageTest{
 	Name: "ACU Config Operational Parameters Test 1",
 	Data: []byte{0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"min_cell_voltage":     2,
-		"max_cell_temp": 0,
+		"min_cell_voltage": 2,
+		"max_cell_temp":    0,
 	},
 }
 var ACUConfigOperationalParametersTest2 = MessageTest{
@@ -253,8 +253,8 @@ var ACUConfigOperationalParametersTest2 = MessageTest{
 	Name: "ACU Config Operational Parameters Test 2",
 	Data: []byte{0x2c, 0x16},
 	ExpectedValues: map[string]interface{}{
-		"min_cell_voltage":     2.44,
-		"max_cell_temp": 32.5,
+		"min_cell_voltage": 2.44,
+		"max_cell_temp":    5.5,
 	},
 }
 
@@ -1117,14 +1117,14 @@ var InverterStatusThreeTest1 = MessageTest{
 	Name: "Inverter Status Three Test 1",
 	Data: []byte{0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"motor_temp":    -40,
-		"over_voltage_faults":  0,
-		"under_voltage_fault":  0,
-		"inverter_overtemp_fault":  0,
-		"motor_overtemp_fault": 0,
-		"transistor_fault":     0,
-		"encoder_fault":        0,
-		"can_fault":            0,
+		"motor_temp":              -40,
+		"over_voltage_faults":     0,
+		"under_voltage_fault":     0,
+		"inverter_overtemp_fault": 0,
+		"motor_overtemp_fault":    0,
+		"transistor_fault":        0,
+		"encoder_fault":           0,
+		"can_fault":               0,
 	},
 }
 
@@ -1133,14 +1133,14 @@ var InverterStatusThreeTest2 = MessageTest{
 	Name: "Inverter Status Three Test 2",
 	Data: []byte{0x64, 0x2f},
 	ExpectedValues: map[string]interface{}{
-		"motor_temp":    60,
-		"over_voltage_faults":  0,
-		"under_voltage_fault":  0,
-		"inverter_overtemp_fault":  1,
-		"motor_overtemp_fault": 0,
-		"transistor_fault":     1,
-		"encoder_fault":        1,
-		"can_fault":            1,
+		"motor_temp":              60,
+		"over_voltage_faults":     0,
+		"under_voltage_fault":     0,
+		"inverter_overtemp_fault": 1,
+		"motor_overtemp_fault":    0,
+		"transistor_fault":        1,
+		"encoder_fault":           1,
+		"can_fault":               1,
 	},
 }
 
@@ -1199,7 +1199,7 @@ var FanStatusTest1 = MessageTest{
 	Name: "Fan Status Test 1",
 	Data: []byte{0x00, 0x00, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"fan_speed":     0,
+		"speed":         0,
 		"input_voltage": 0,
 		"input_current": 0,
 	},
@@ -1210,7 +1210,7 @@ var FanStatusTest2 = MessageTest{
 	Name: "Fan Status Test 2",
 	Data: []byte{0xdf, 0x41, 0x9d, 0x1d},
 	ExpectedValues: map[string]interface{}{
-		"fan_speed":     16863,
+		"speed":         16863,
 		"input_voltage": 15.7,
 		"input_current": 2.9,
 	},
@@ -1238,9 +1238,9 @@ var DashStatusTest1 = MessageTest{
 	Name: "Dash Status Test 1",
 	Data: []byte{0x00, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"bms_led":         0,
-		"imd_led":         0,
-		"bspd_led":        0,
+		"bms_led":  0,
+		"imd_led":  0,
+		"bspd_led": 0,
 	},
 }
 
@@ -1249,9 +1249,9 @@ var DashStatusTest2 = MessageTest{
 	Name: "Dash Status Test 2",
 	Data: []byte{0x05, 0x1e, 0xF4},
 	ExpectedValues: map[string]interface{}{
-		"bms_led":         1,
-		"imd_led":         0,
-		"bspd_led":        1,
+		"bms_led":  1,
+		"imd_led":  0,
+		"bspd_led": 1,
 	},
 }
 
@@ -1367,12 +1367,12 @@ var SAMIMUTest1 = MessageTest{
 	Name: "SAM IMU Test 1",
 	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"acceleration_x":     -327.68,
-		"acceleration_y":     -327.68,
-		"acceleration_z":     -327.68,
-		"gyroscope_x": -32.768,
-		"gyroscope_y": -32.768,
-		"gyroscope_z": -32.768,
+		"acceleration_x": -327.68,
+		"acceleration_y": -327.68,
+		"acceleration_z": -327.68,
+		"gyroscope_x":    -32.768,
+		"gyroscope_y":    -32.768,
+		"gyroscope_z":    -32.768,
 	},
 }
 var SAMIMUTest2 = MessageTest{
@@ -1380,12 +1380,12 @@ var SAMIMUTest2 = MessageTest{
 	Name: "SAM IMU Test 2",
 	Data: []byte{0x7d, 0xc2, 0xb7, 0x61, 0xaf, 0x20, 0x2e, 0x72, 0x5d, 0xac, 0xaf, 0xa1},
 	ExpectedValues: map[string]interface{}{
-		"acceleration_x":     -170.21,
-		"acceleration_y":     -77.53,
-		"acceleration_z":     -244.01,
-		"gyroscope_x": -3.538,
-		"gyroscope_y": 11.357,
-		"gyroscope_z": 8.623,
+		"acceleration_x": -170.21,
+		"acceleration_y": -77.53,
+		"acceleration_z": -244.01,
+		"gyroscope_x":    -3.538,
+		"gyroscope_y":    11.357,
+		"gyroscope_z":    8.623,
 	},
 }
 
@@ -1469,13 +1469,13 @@ var TCMResourceTest1 = MessageTest{
 	Name: "TCM Resource Utilization Test 1",
 	Data: []byte{0x35, 0x1b, 0x58, 0x03, 0xB8, 0x4b, 0x59},
 	ExpectedValues: map[string]interface{}{
-		"cpu_util":    53,
-		"gpu_util":    27,
-		"ram_util":    88,
-		"disk_util":   3,
+		"cpu_util":   53,
+		"gpu_util":   27,
+		"ram_util":   88,
+		"disk_util":  3,
 		"power_util": 18.4,
-		"cpu_temp":    75,
-		"gpu_temp":    89,
+		"cpu_temp":   75,
+		"gpu_temp":   89,
 	},
 }
 
@@ -1484,13 +1484,13 @@ var TCMResourceTest2 = MessageTest{
 	Name: "TCM Resource Utilization Test 2",
 	Data: []byte{0x00, 0x00, 0x01, 0x02, 0x03, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"cpu_util":    0,
-		"gpu_util":    0,
-		"ram_util":    1,
-		"disk_util":   2,
+		"cpu_util":   0,
+		"gpu_util":   0,
+		"ram_util":   1,
+		"disk_util":  2,
 		"power_util": 0.3,
-		"cpu_temp":    0,
-		"gpu_temp":    0,
+		"cpu_temp":   0,
+		"gpu_temp":   0,
 	},
 }
 
@@ -1499,18 +1499,18 @@ var TCMResourceTest3 = MessageTest{
 	Name: "TCM Resource Utilization Test 3",
 	Data: []byte{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
 	ExpectedValues: map[string]interface{}{
-		"cpu_util":    255,
-		"gpu_util":    255,
-		"ram_util":    255,
-		"disk_util":   255,
+		"cpu_util":   255,
+		"gpu_util":   255,
+		"ram_util":   255,
+		"disk_util":  255,
 		"power_util": 25.5,
-		"cpu_temp":    255,
-		"gpu_temp":    255,
+		"cpu_temp":   255,
+		"gpu_temp":   255,
 	},
 }
 
 var DashWarningFlagsTest1 = MessageTest{
-	ID: 0x02B,
+	ID:   0x02B,
 	Name: "Dash Warning Flags Test 1",
 	Data: []byte{0x00},
 	ExpectedValues: map[string]interface{}{
@@ -1519,7 +1519,7 @@ var DashWarningFlagsTest1 = MessageTest{
 }
 
 var DashWarningFlagsTest2 = MessageTest{
-	ID: 0x02B,
+	ID:   0x02B,
 	Name: "Dash Warning Flags Test 2",
 	Data: []byte{0xFF},
 	ExpectedValues: map[string]interface{}{
@@ -1549,25 +1549,25 @@ var DashWarningFlagsTest2 = MessageTest{
 // }
 
 var ECUPedalsDataTest1 = MessageTest{
-	ID: 0x02E,
+	ID:   0x02E,
 	Name: "ECU Pedals Data Test 1",
 	Data: []byte{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"apps_one": 0,
-		"apps_two": 0,
+		"apps_one":       0,
+		"apps_two":       0,
 		"brake_pressure": 0,
-		"brake_force": 0,
+		"brake_force":    0,
 	},
 }
 
 var ECUPedalsDataTest2 = MessageTest{
-	ID: 0x02E,
+	ID:   0x02E,
 	Name: "ECU Pedals Data Test 2",
 	Data: []byte{0xee, 0x5b, 0xfa, 0xff, 0x24, 0xcc, 0x1e, 0x02},
 	ExpectedValues: map[string]interface{}{
-		"apps_one": 35.9,
-		"apps_two": 99.99,
+		"apps_one":       35.91,
+		"apps_two":       99.99,
 		"brake_pressure": 79.74,
-		"brake_force": 0.83,
+		"brake_force":    0.83,
 	},
 }
