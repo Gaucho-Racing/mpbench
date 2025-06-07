@@ -18,13 +18,13 @@ function App() {
 
   React.useEffect(() => {
     getRuns();
-    const interval = setInterval(getRuns, 2000);
+    const interval = setInterval(getRuns, 5000);
     return () => clearInterval(interval);
   }, []);
 
   const getRuns = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/runs`, {});
+      const response = await axios.get(`${BACKEND_URL}/runs?limit=20`, {});
       setRuns(response.data);
     } catch (error) {
       notify.error(getAxiosErrorMessage(error));
