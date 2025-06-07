@@ -1081,9 +1081,9 @@ var InverterStatusOneTest1 = MessageTest{
 var InverterStatusOneTest2 = MessageTest{
 	ID:   0x013,
 	Name: "Inverter Status One Test 2",
-	Data: []byte{0x19, 0x33, 0xec, 0x87, 0x0d, 0xb1}, // add
+	Data: []byte{0x19, 0x33, 0xec, 0x87, 0x0d, 0xb1},
 	ExpectedValues: map[string]interface{}{
-		"ac_current": 7.93,
+		"ac_current": -196.87,
 		"dc_current": 347.96,
 		"motor_rpm":  12557,
 	},
@@ -1104,7 +1104,7 @@ var InverterStatusTwoTest1 = MessageTest{
 var InverterStatusTwoTest2 = MessageTest{
 	ID:   0x014,
 	Name: "Inverter Status Two Test 2",
-	Data: []byte{0x73, 0x75, 0x04},
+	Data: []byte{0x49, 0x4b, 0x4c},
 	ExpectedValues: map[string]interface{}{
 		"u_mosfet_temp": 33,
 		"v_mosfet_temp": 35,
@@ -1134,13 +1134,13 @@ var InverterStatusThreeTest2 = MessageTest{
 	Data: []byte{0x64, 0x2f},
 	ExpectedValues: map[string]interface{}{
 		"motor_temp":              60,
-		"over_voltage_faults":     0,
-		"under_voltage_fault":     0,
+		"over_voltage_faults":     1,
+		"under_voltage_fault":     1,
 		"inverter_overtemp_fault": 1,
-		"motor_overtemp_fault":    0,
-		"transistor_fault":        1,
+		"motor_overtemp_fault":    1,
+		"transistor_fault":        0,
 		"encoder_fault":           1,
-		"can_fault":               1,
+		"can_fault":               0,
 	},
 }
 
@@ -1163,7 +1163,7 @@ var InverterConfigTest2 = MessageTest{
 	ExpectedValues: map[string]interface{}{
 		"max_ac_current":         104.9,
 		"max_dc_current":         213.32,
-		"absolute_max_rpm_limit": 38063,
+		"absolute_max_rpm_limit": 28063,
 		"motor_direction":        1,
 	},
 }
