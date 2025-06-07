@@ -1,3 +1,5 @@
+<img src="/assests/mpbench.png" alt="mpbench logo" width="50" align="left" style="margin-right: 10px;">
+
 # mpbench
 
 [![build](https://github.com/Gaucho-Racing/mpbench/actions/workflows/build.yml/badge.svg)](https://github.com/Gaucho-Racing/mpbench/actions/workflows/build.yml)
