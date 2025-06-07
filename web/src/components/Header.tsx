@@ -18,7 +18,7 @@ const Header = (props: HeaderProps) => {
           onClick={() => navigate("/")}
         >
           <img src="/logo/mpbench.png" width={40} height={40} alt="Logo" />
-          <h1 className="ml-4">MPBench</h1>
+          <h1 className="ml-4">mpbench</h1>
         </div>
       </div>
     </div>
