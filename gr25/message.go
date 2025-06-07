@@ -1104,7 +1104,7 @@ var InverterStatusTwoTest1 = MessageTest{
 var InverterStatusTwoTest2 = MessageTest{
 	ID:   0x014,
 	Name: "Inverter Status Two Test 2",
-	Data: []byte{0x73, 0x75, 0x04},
+	Data: []byte{0x49, 0x4b, 0x4c},
 	ExpectedValues: map[string]interface{}{
 		"u_mosfet_temp": 33,
 		"v_mosfet_temp": 35,
@@ -1163,7 +1163,7 @@ var InverterConfigTest2 = MessageTest{
 	ExpectedValues: map[string]interface{}{
 		"max_ac_current":         104.9,
 		"max_dc_current":         213.32,
-		"absolute_max_rpm_limit": 38063,
+		"absolute_max_rpm_limit": 28063,
 		"motor_direction":        1,
 	},
 }
