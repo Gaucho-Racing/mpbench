@@ -1134,13 +1134,13 @@ var InverterStatusThreeTest2 = MessageTest{
 	Data: []byte{0x64, 0x2f},
 	ExpectedValues: map[string]interface{}{
 		"motor_temp":              60,
-		"over_voltage_faults":     0,
-		"under_voltage_fault":     0,
+		"over_voltage_faults":     1,
+		"under_voltage_fault":     1,
 		"inverter_overtemp_fault": 1,
-		"motor_overtemp_fault":    0,
-		"transistor_fault":        1,
+		"motor_overtemp_fault":    1,
+		"transistor_fault":        0,
 		"encoder_fault":           1,
-		"can_fault":               1,
+		"can_fault":               0,
 	},
 }
 
