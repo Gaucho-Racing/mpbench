@@ -33,9 +33,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-      - name: Build Dashboard
+      - name: Build Web
         run: |
-          cd dashboard
+          cd web
           npm ci
           npm run build
 
