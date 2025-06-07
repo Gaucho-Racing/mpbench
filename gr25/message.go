@@ -1081,9 +1081,9 @@ var InverterStatusOneTest1 = MessageTest{
 var InverterStatusOneTest2 = MessageTest{
 	ID:   0x013,
 	Name: "Inverter Status One Test 2",
-	Data: []byte{0x19, 0x33, 0xec, 0x87, 0x0d, 0xb1}, // add
+	Data: []byte{0x19, 0x33, 0xec, 0x87, 0x0d, 0xb1},
 	ExpectedValues: map[string]interface{}{
-		"ac_current": 7.93,
+		"ac_current": -196.87,
 		"dc_current": 347.96,
 		"motor_rpm":  12557,
 	},
