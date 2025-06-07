@@ -39,6 +39,12 @@ docker run \
     ghcr.io/singlestore-labs/singlestoredb-dev:latest
 ```
 
+Once running, create the mpbench database that the application is going to use. You can do this by executing the following command from the Studio UI (accessible at http://localhost:8080).
+
+```sql
+CREATE DATABASE mpbench;
+```
+
 ## Contributing
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
