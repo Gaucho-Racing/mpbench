@@ -68,7 +68,7 @@ func RunTests(run model.Run, mqttClient *mq.Client, db *gorm.DB) {
 }
 
 func (m MessageTest) Run(run model.Run, mqttClient *mq.Client, db *gorm.DB) bool {
-	timestamp := time.Now().UnixMilli()
+	timestamp := time.Now().UnixMicro()
 	// Create byte array to hold timestamp (8 bytes) + uploadKey (2 bytes) + data
 	result := make([]byte, 10+len(m.Data))
 	binary.BigEndian.PutUint64(result[0:8], uint64(timestamp))
