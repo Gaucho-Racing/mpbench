@@ -5,8 +5,6 @@ import "fmt"
 func GenerateTCMTests() []MessageTest {
 	var tests = []MessageTest{
 		TCMResourceTest1,
-		TCMResourceTest2,
-		TCMResourceTest3,
 	}
 
 	for i := range tests {

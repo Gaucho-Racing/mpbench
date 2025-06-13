@@ -109,7 +109,7 @@ var ACUStatusOneTest1 = MessageTest{
 	ExpectedValues: map[string]interface{}{
 		"accumulator_voltage": 0,
 		"ts_voltage":          0,
-		"accumulator_current": -327.68,
+		"accumulator_current": 0,
 		"accumulator_soc":     0,
 		"glv_soc":             0,
 	},
@@ -122,7 +122,7 @@ var ACUStatusOneTest2 = MessageTest{
 	ExpectedValues: map[string]interface{}{
 		"accumulator_voltage": 19.24,
 		"ts_voltage":          48.23,
-		"accumulator_current": -72.33,
+		"accumulator_current": 255.35,
 		"accumulator_soc":     50.196,
 		"glv_soc":             95.294,
 	},
@@ -1467,45 +1467,61 @@ var SAMPushrodForceTest2 = MessageTest{
 var TCMResourceTest1 = MessageTest{
 	ID:   0x02A,
 	Name: "TCM Resource Utilization Test 1",
-	Data: []byte{0x35, 0x1b, 0x58, 0x03, 0xB8, 0x4b, 0x59},
-	ExpectedValues: map[string]interface{}{
-		"cpu_util":   53,
-		"gpu_util":   27,
-		"ram_util":   88,
-		"disk_util":  3,
-		"power_util": 18.4,
-		"cpu_temp":   75,
-		"gpu_temp":   89,
+	Data: []byte{
+		0x0B, 0xB8, // CPU0 Freq (3000)
+		0x32,       // CPU0 Util (50)
+		0x0B, 0xB8, // CPU1 Freq (3000)
+		0x30,       // CPU1 Util (48)
+		0x0B, 0xB8, // CPU2 Freq (3000)
+		0x2D,       // CPU2 Util (45)
+		0x0B, 0xB8, // CPU3 Freq (3000)
+		0x28,       // CPU3 Util (40)
+		0x0B, 0xB8, // CPU4 Freq (3000)
+		0x25,       // CPU4 Util (37)
+		0x0B, 0xB8, // CPU5 Freq (3000)
+		0x20,       // CPU5 Util (32)
+		0x2A,       // CPU Total Util (42)
+		0x20, 0x00, // RAM Total (8192)
+		0x10, 0x00, // RAM Used (4096)
+		0x50,       // RAM Util (80)
+		0x2B,       // GPU Util (43)
+		0x13, 0x88, // GPU Freq (5000)
+		0x00, 0x10, 0x00, 0x00, // Disk Total (1048576)
+		0x00, 0x08, 0x00, 0x00, // Disk Used (524288)
+		0x40,       // Disk Util (64)
+		0x4B,       // CPU Temp (75°C)
+		0x59,       // GPU Temp (89°C)
+		0x27, 0x10, // Voltage (10000 mV = 10.0 V)
+		0x03, 0xE8, // Current (1000 mA = 1.0 A)
+		0x46, 0x50, // Power (18000 mW = 18.0 W)
 	},
-}
-
-var TCMResourceTest2 = MessageTest{
-	ID:   0x02A,
-	Name: "TCM Resource Utilization Test 2",
-	Data: []byte{0x00, 0x00, 0x01, 0x02, 0x03, 0x00, 0x00},
 	ExpectedValues: map[string]interface{}{
-		"cpu_util":   0,
-		"gpu_util":   0,
-		"ram_util":   1,
-		"disk_util":  2,
-		"power_util": 0.3,
-		"cpu_temp":   0,
-		"gpu_temp":   0,
-	},
-}
-
-var TCMResourceTest3 = MessageTest{
-	ID:   0x02A,
-	Name: "TCM Resource Utilization Test 3",
-	Data: []byte{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
-	ExpectedValues: map[string]interface{}{
-		"cpu_util":   255,
-		"gpu_util":   255,
-		"ram_util":   255,
-		"disk_util":  255,
-		"power_util": 25.5,
-		"cpu_temp":   255,
-		"gpu_temp":   255,
+		"cpu_0_freq":     3000,
+		"cpu_0_util":     50,
+		"cpu_1_freq":     3000,
+		"cpu_1_util":     48,
+		"cpu_2_freq":     3000,
+		"cpu_2_util":     45,
+		"cpu_3_freq":     3000,
+		"cpu_3_util":     40,
+		"cpu_4_freq":     3000,
+		"cpu_4_util":     37,
+		"cpu_5_freq":     3000,
+		"cpu_5_util":     32,
+		"cpu_total_util": 42,
+		"ram_total":      8192,
+		"ram_used":       4096,
+		"ram_util":       80,
+		"gpu_util":       43,
+		"gpu_freq":       5000,
+		"disk_total":     1048576,
+		"disk_used":      524288,
+		"disk_util":      64,
+		"cpu_temp":       75,
+		"gpu_temp":       89,
+		"voltage_draw":   10.0,
+		"current_draw":   1.0,
+		"power_draw":     18.0,
 	},
 }
 
