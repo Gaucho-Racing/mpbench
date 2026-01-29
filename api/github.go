@@ -3,7 +3,6 @@ package api
 import (
 	"mpbench/config"
 	"mpbench/model"
-	"mpbench/runner"
 	"mpbench/utils"
 	"net/http"
 
