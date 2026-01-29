@@ -26,11 +26,6 @@ func GithubEventHandler(c *gin.Context) {
 		if checkSuiteEvent.Action != "requested" && checkSuiteEvent.Action != "rerequested" {
 			return
 		}
-
-		go func() {
-			runner.CreateGR25Runs(checkSuiteEvent.CheckSuite.HeadSha)
-		}()
-
 	} else if ghEventType == "check_run" {
 		var checkRunEvent model.GithubCheckRunEvent
 		if err := c.ShouldBindJSON(&checkRunEvent); err != nil {
@@ -45,10 +40,6 @@ func GithubEventHandler(c *gin.Context) {
 		if checkRunEvent.Action != "rerequested" {
 			return
 		}
-
-		go func() {
-			runner.CreateGR25Runs(checkRunEvent.CheckRun.HeadSha)
-		}()
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Github event received"})
